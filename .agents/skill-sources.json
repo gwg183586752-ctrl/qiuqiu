@@ -1,0 +1,22 @@
+{
+  "installedAt": "2026-10-20",
+  "scope": "project",
+  "directory": ".agents/skills",
+  "sources": [
+    {
+      "repository": "https://github.com/Fission-AI/OpenSpec",
+      "version": "1.14.1",
+      "tool": "codex",
+      "profile": "core",
+      "skillCount": 6,
+      "installCommand": "openspec init --tools codex --language 简体中文 --profile core --no-animation"
+    },
+    {
+      "repository": "https://github.com/mattpocock/skills",
+      "commit": "5beb35b040e3de97e54fa9e386d7e42d15c295c2",
+      "sourceDirectories": ["skills/engineering", "skills/productivity"],
+      "skillCount": 27,
+      "installer": "Codex skill-installer/install-skill-from-github.py"
+    }
+  ]
+}
