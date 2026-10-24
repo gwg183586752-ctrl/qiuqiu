@@ -1,0 +1,60 @@
+{
+  "mode": "real",
+  "evidence": "real-cloud",
+  "inputSource": "provided-wav",
+  "directory": "C:\\Users\\GWG\\Desktop\\qiuqiu\\.cache\\real-cloud-1792859540930",
+  "models": {
+    "chat": "mimo-v2.6-flash",
+    "asr": "mimo-v2.5-asr",
+    "tts": "mimo-v2.5-tts",
+    "voice": "冰糖"
+  },
+  "brainMode": "agent",
+  "startedAt": "2026-10-24T16:32:20.931Z",
+  "transcript": "现在北京时间几点",
+  "success": true,
+  "answer": "现在是北京时间 00:32，深夜啦。你是准备看夜场球赛吗？",
+  "timings": {
+    "asrMs": 842.1846,
+    "toolModelMs": 3120.1907000000006,
+    "discardedToolTextChars": 44,
+    "toolMs": 23.574699999999666,
+    "actualToolAttempts": 1,
+    "modelReadWaitMs": 4031.260299999998,
+    "firstTextMs": 4627.2147,
+    "ttsMs": 2289.6177,
+    "firstAudioReadyMs": 6447.450699999999,
+    "finalModelAndSpeechMs": 3185.3829000000005,
+    "totalServerMs": 7172.177600000001
+  },
+  "segments": [
+    {
+      "sequence": 0,
+      "text": "现在是北京时间 00:32，深夜啦。",
+      "emotion": "relaxed"
+    },
+    {
+      "sequence": 1,
+      "text": "你是准备看夜场球赛吗？",
+      "emotion": "neutral"
+    }
+  ],
+  "tools": [
+    {
+      "ordinal": 1,
+      "name": "get_server_time",
+      "executed": true,
+      "status": "succeeded",
+      "input": {
+        "timeZone": "Asia/Shanghai"
+      },
+      "result": {
+        "iso": "2026-10-24T16:32:23.674Z",
+        "timeZone": "Asia/Shanghai",
+        "localTime": "2026-10-25 00:32:23"
+      },
+      "durationMs": 23.574699999999666
+    }
+  ],
+  "completedAt": "2026-10-24T16:32:28.122Z"
+}

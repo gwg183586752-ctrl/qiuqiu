@@ -1,0 +1,235 @@
+{
+  "directory": "C:\\Users\\GWG\\Desktop\\qiuqiu\\.cache\\sdk-spike-1792859541098",
+  "evidence": "real-sdk-real-mimo",
+  "versions": {
+    "ai": "6.0.315",
+    "provider": "2.0.87"
+  },
+  "model": "mimo-v2.6-flash",
+  "thinking": false,
+  "decisionMs": 1568.7073999999998,
+  "discardedTextChars": 0,
+  "reasoningChars": 0,
+  "toolMs": 0.22490000000016153,
+  "actualAttempts": 3,
+  "results": [
+    {
+      "id": "call_56aaf777a97a4f96a64298ff",
+      "name": "get_server_time",
+      "value": {
+        "iso": "2026-10-24T16:32:22.678Z",
+        "timeZone": "Asia/Shanghai",
+        "localTime": "2026-10-25 00:32:22"
+      }
+    },
+    {
+      "id": "call_65a19595d01241be8fc622a8",
+      "name": "get_server_time",
+      "value": {
+        "iso": "2026-10-24T16:32:22.705Z",
+        "timeZone": "Asia/Shanghai",
+        "localTime": "2026-10-25 00:32:22"
+      }
+    },
+    {
+      "id": "call_02660344fb3145babd5550dd",
+      "name": "get_server_time",
+      "value": {
+        "iso": "2026-10-24T16:32:22.705Z",
+        "timeZone": "UTC",
+        "localTime": "2026-10-24 16:32:22"
+      }
+    },
+    {
+      "id": "call_5a4660b548fc492a87f01999",
+      "name": "get_server_time",
+      "value": {
+        "error": "rejected"
+      }
+    }
+  ],
+  "firstFinalTextMs": 8070.767199999999,
+  "success": true,
+  "answer": "已获取查询结果，当前时间为：北京时间 2026年10月25日 00:32:22（对应 UTC 2026年10月24日 16:32:22）。",
+  "finalMs": 7628.739099999999,
+  "totalMs": 9227.2271,
+  "events": [
+    {
+      "event": "stream-part",
+      "type": "start"
+    },
+    {
+      "event": "request",
+      "model": "mimo-v2.6-flash",
+      "tools": [
+        "get_server_time"
+      ],
+      "toolsFieldPresent": true,
+      "toolChoice": "auto",
+      "thinking": {
+        "type": "disabled"
+      },
+      "toolResultMessages": 0,
+      "reasoningHistoryMessages": 0
+    },
+    {
+      "event": "stream-part",
+      "type": "start-step"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-start"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-start"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-start"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-start"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-end"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-call"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-end"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-call"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-end"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-call"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-end"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-call"
+    },
+    {
+      "event": "stream-part",
+      "type": "finish-step"
+    },
+    {
+      "event": "stream-part",
+      "type": "finish"
+    },
+    {
+      "event": "request",
+      "model": "mimo-v2.6-flash",
+      "tools": [],
+      "toolsFieldPresent": false,
+      "thinking": {
+        "type": "disabled"
+      },
+      "toolResultMessages": 4,
+      "reasoningHistoryMessages": 0
+    }
+  ]
+}

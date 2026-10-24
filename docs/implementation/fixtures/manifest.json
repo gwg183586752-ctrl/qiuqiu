@@ -1,0 +1,4 @@
+[
+  { "name": "ordinary", "text": "我喜欢阿森纳，请陪我聊聊足球。", "path": "docs/implementation/fixtures/ordinary.wav" },
+  { "name": "time", "text": "现在北京时间几点？", "path": "docs/implementation/fixtures/time.wav" }
+]

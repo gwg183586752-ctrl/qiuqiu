@@ -1,0 +1,146 @@
+{
+  "directory": "C:\\Users\\GWG\\Desktop\\qiuqiu\\.cache\\sdk-spike-1792859411757",
+  "evidence": "real-sdk-real-mimo",
+  "versions": {
+    "ai": "6.0.315",
+    "provider": "2.0.87"
+  },
+  "model": "mimo-v2.6-flash",
+  "thinking": true,
+  "decisionMs": 2220.8187,
+  "discardedTextChars": 0,
+  "reasoningChars": 52,
+  "toolMs": 26.838999999999942,
+  "actualAttempts": 1,
+  "results": [
+    {
+      "id": "call_9fcfbccdb45f4bfab43b032a",
+      "name": "get_server_time",
+      "value": {
+        "iso": "2026-10-24T16:30:13.989Z",
+        "timeZone": "Asia/Shanghai",
+        "localTime": "2026-10-25 00:30:13"
+      }
+    }
+  ],
+  "firstFinalTextMs": 4792.1408,
+  "success": true,
+  "answer": "北京时间已查询：2026年10月25日 00时30分13秒。",
+  "finalMs": 3326.3423000000003,
+  "totalMs": 5575.1721,
+  "events": [
+    {
+      "event": "stream-part",
+      "type": "start"
+    },
+    {
+      "event": "request",
+      "model": "mimo-v2.6-flash",
+      "tools": [
+        "get_server_time"
+      ],
+      "toolsFieldPresent": true,
+      "toolChoice": "auto",
+      "thinking": {
+        "type": "enabled"
+      },
+      "toolResultMessages": 0,
+      "reasoningHistoryMessages": 0
+    },
+    {
+      "event": "stream-part",
+      "type": "start-step"
+    },
+    {
+      "event": "stream-part",
+      "type": "reasoning-start"
+    },
+    {
+      "event": "stream-part",
+      "type": "reasoning-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "reasoning-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "reasoning-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "reasoning-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "reasoning-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "reasoning-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "reasoning-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "reasoning-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "reasoning-end"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-start"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-end"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-call"
+    },
+    {
+      "event": "stream-part",
+      "type": "finish-step"
+    },
+    {
+      "event": "stream-part",
+      "type": "finish"
+    },
+    {
+      "event": "request",
+      "model": "mimo-v2.6-flash",
+      "tools": [],
+      "toolsFieldPresent": false,
+      "thinking": {
+        "type": "enabled"
+      },
+      "toolResultMessages": 1,
+      "reasoningHistoryMessages": 1
+    }
+  ]
+}

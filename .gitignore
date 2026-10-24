@@ -9,6 +9,10 @@ node_modules/
 dist/
 build/
 coverage/
+data/
+playwright-report/
+test-results/
+.cache/
 .next/
 .nuxt/
 .output/

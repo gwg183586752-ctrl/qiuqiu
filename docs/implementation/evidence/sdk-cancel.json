@@ -1,0 +1,34 @@
+{
+  "directory": "C:\\Users\\GWG\\Desktop\\qiuqiu\\.cache\\sdk-spike-1792859541101",
+  "evidence": "real-sdk-real-mimo",
+  "versions": {
+    "ai": "6.0.315",
+    "provider": "2.0.87"
+  },
+  "model": "mimo-v2.6-flash",
+  "thinking": false,
+  "success": false,
+  "reason": "cancelled_or_timeout",
+  "elapsedMs": 269.5862000000001,
+  "expectedCancellation": true,
+  "events": [
+    {
+      "event": "stream-part",
+      "type": "start"
+    },
+    {
+      "event": "request",
+      "model": "mimo-v2.6-flash",
+      "tools": [
+        "get_server_time"
+      ],
+      "toolsFieldPresent": true,
+      "toolChoice": "auto",
+      "thinking": {
+        "type": "disabled"
+      },
+      "toolResultMessages": 0,
+      "reasoningHistoryMessages": 0
+    }
+  ]
+}

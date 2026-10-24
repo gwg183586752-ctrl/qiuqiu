@@ -1,0 +1,110 @@
+{
+  "directory": "C:\\Users\\GWG\\Desktop\\qiuqiu\\.cache\\sdk-spike-1792859286711",
+  "evidence": "real-sdk-real-mimo",
+  "versions": {
+    "ai": "6.0.315",
+    "provider": "2.0.87"
+  },
+  "model": "mimo-v2.6-flash",
+  "thinking": false,
+  "decisionMs": 1074.3635,
+  "discardedTextChars": 0,
+  "reasoningChars": 0,
+  "toolMs": 35.1422,
+  "actualAttempts": 1,
+  "results": [
+    {
+      "id": "call_8b569abab0334e42b505075a",
+      "name": "get_server_time",
+      "value": {
+        "iso": "2026-10-24T16:28:07.791Z",
+        "timeZone": "Asia/Shanghai",
+        "localTime": "2026-10-25 00:28:07"
+      }
+    }
+  ],
+  "firstFinalTextMs": 1727.0559000000003,
+  "success": true,
+  "answer": "北京时间为 2026年10月25日 00:28:07。",
+  "finalMs": 1175.4265000000003,
+  "totalMs": 2286.0239,
+  "events": [
+    {
+      "event": "stream-part",
+      "type": "start"
+    },
+    {
+      "event": "request",
+      "model": "mimo-v2.6-flash",
+      "tools": [
+        "get_server_time"
+      ],
+      "toolsFieldPresent": true,
+      "toolChoice": "auto",
+      "thinking": {
+        "type": "disabled"
+      },
+      "toolResultMessages": 0,
+      "reasoningHistoryMessages": 0
+    },
+    {
+      "event": "stream-part",
+      "type": "start-step"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-start"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-delta"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-input-end"
+    },
+    {
+      "event": "stream-part",
+      "type": "tool-call"
+    },
+    {
+      "event": "stream-part",
+      "type": "finish-step"
+    },
+    {
+      "event": "stream-part",
+      "type": "finish"
+    },
+    {
+      "event": "request",
+      "model": "mimo-v2.6-flash",
+      "tools": [],
+      "toolsFieldPresent": false,
+      "thinking": {
+        "type": "disabled"
+      },
+      "toolResultMessages": 1,
+      "reasoningHistoryMessages": 0
+    }
+  ]
+}

@@ -1,0 +1,286 @@
+{
+  "smallSampleWarning": "每类仅三轮正式样本；p95是最近秩统计，通常等于最大值，不能推断长期服务分位数。失败样本保留并计入失败率。",
+  "sameConditions": true,
+  "baseline": {
+    "ordinary": {
+      "total": 3,
+      "successful": 3,
+      "failed": 0,
+      "failureRate": 0,
+      "metrics": {
+        "firstTextMs": {
+          "n": 3,
+          "medianMs": 2798.6685999999972,
+          "p95Ms": 3358.071200000006,
+          "maxMs": 3358.071200000006
+        },
+        "firstAudioReadyMs": {
+          "n": 3,
+          "medianMs": 5292.138999999996,
+          "p95Ms": 5323.649300000005,
+          "maxMs": 5323.649300000005
+        },
+        "firstAudioMs": {
+          "n": 3,
+          "medianMs": 5374.199999999255,
+          "p95Ms": 5409.099999997765,
+          "maxMs": 5409.099999997765
+        },
+        "asrMs": {
+          "n": 3,
+          "medianMs": 910.4015000000072,
+          "p95Ms": 1847.387499999997,
+          "maxMs": 1847.387499999997
+        },
+        "toolModelMs": {
+          "n": 0,
+          "medianMs": null,
+          "p95Ms": null,
+          "maxMs": null
+        },
+        "toolMs": {
+          "n": 0,
+          "medianMs": null,
+          "p95Ms": null,
+          "maxMs": null
+        },
+        "ttsMs": {
+          "n": 3,
+          "medianMs": 3656.952900000004,
+          "p95Ms": 4912.170899999997,
+          "maxMs": 4912.170899999997
+        },
+        "modelReadWaitMs": {
+          "n": 3,
+          "medianMs": 2649.490300000005,
+          "p95Ms": 2759.6114999999845,
+          "maxMs": 2759.6114999999845
+        },
+        "totalServerMs": {
+          "n": 3,
+          "medianMs": 7339.050900000002,
+          "p95Ms": 7594.263800000001,
+          "maxMs": 7594.263800000001
+        }
+      }
+    },
+    "time": {
+      "total": 3,
+      "successful": 3,
+      "failed": 0,
+      "failureRate": 0,
+      "metrics": {
+        "firstTextMs": {
+          "n": 3,
+          "medianMs": 1564.2331999999878,
+          "p95Ms": 2447.6481000000203,
+          "maxMs": 2447.6481000000203
+        },
+        "firstAudioReadyMs": {
+          "n": 3,
+          "medianMs": 3686.9467000000004,
+          "p95Ms": 4648.426800000016,
+          "maxMs": 4648.426800000016
+        },
+        "firstAudioMs": {
+          "n": 3,
+          "medianMs": 3760.300000000745,
+          "p95Ms": 4721.599999997765,
+          "maxMs": 4721.599999997765
+        },
+        "asrMs": {
+          "n": 3,
+          "medianMs": 900.62950000001,
+          "p95Ms": 932.1888999999792,
+          "maxMs": 932.1888999999792
+        },
+        "toolModelMs": {
+          "n": 0,
+          "medianMs": null,
+          "p95Ms": null,
+          "maxMs": null
+        },
+        "toolMs": {
+          "n": 0,
+          "medianMs": null,
+          "p95Ms": null,
+          "maxMs": null
+        },
+        "ttsMs": {
+          "n": 3,
+          "medianMs": 1539.9849000000104,
+          "p95Ms": 1643.064400000003,
+          "maxMs": 1643.064400000003
+        },
+        "modelReadWaitMs": {
+          "n": 3,
+          "medianMs": 1212.554999999993,
+          "p95Ms": 2287.9631000000227,
+          "maxMs": 2287.9631000000227
+        },
+        "totalServerMs": {
+          "n": 3,
+          "medianMs": 3689.524000000005,
+          "p95Ms": 4650.308400000009,
+          "maxMs": 4650.308400000009
+        }
+      }
+    }
+  },
+  "agent": {
+    "ordinary": {
+      "total": 3,
+      "successful": 3,
+      "failed": 0,
+      "failureRate": 0,
+      "metrics": {
+        "firstTextMs": {
+          "n": 3,
+          "medianMs": 4674.2255000000005,
+          "p95Ms": 8171.071200000006,
+          "maxMs": 8171.071200000006
+        },
+        "firstAudioReadyMs": {
+          "n": 3,
+          "medianMs": 8353.709099999993,
+          "p95Ms": 10883.02900000001,
+          "maxMs": 10883.02900000001
+        },
+        "firstAudioMs": {
+          "n": 3,
+          "medianMs": 8421.800000000745,
+          "p95Ms": 10952.800000000745,
+          "maxMs": 10952.800000000745
+        },
+        "asrMs": {
+          "n": 3,
+          "medianMs": 862.7927999999956,
+          "p95Ms": 1591.8029999999999,
+          "maxMs": 1591.8029999999999
+        },
+        "toolModelMs": {
+          "n": 3,
+          "medianMs": 3019.6510999999955,
+          "p95Ms": 5343.3036999999895,
+          "maxMs": 5343.3036999999895
+        },
+        "toolMs": {
+          "n": 0,
+          "medianMs": null,
+          "p95Ms": null,
+          "maxMs": null
+        },
+        "ttsMs": {
+          "n": 3,
+          "medianMs": 3630.206699999995,
+          "p95Ms": 5003.655100000018,
+          "maxMs": 5003.655100000018
+        },
+        "modelReadWaitMs": {
+          "n": 3,
+          "medianMs": 4531.304399999986,
+          "p95Ms": 7139.000500000053,
+          "maxMs": 7139.000500000053
+        },
+        "totalServerMs": {
+          "n": 3,
+          "medianMs": 9915.518899999995,
+          "p95Ms": 12370.654200000004,
+          "maxMs": 12370.654200000004
+        }
+      }
+    },
+    "time": {
+      "total": 3,
+      "successful": 3,
+      "failed": 0,
+      "failureRate": 0,
+      "metrics": {
+        "firstTextMs": {
+          "n": 3,
+          "medianMs": 4488.617599999998,
+          "p95Ms": 4719.182199999981,
+          "maxMs": 4719.182199999981
+        },
+        "firstAudioReadyMs": {
+          "n": 3,
+          "medianMs": 6558.141100000008,
+          "p95Ms": 6784.781799999997,
+          "maxMs": 6784.781799999997
+        },
+        "firstAudioMs": {
+          "n": 3,
+          "medianMs": 6636.300000000745,
+          "p95Ms": 6856.199999999255,
+          "maxMs": 6856.199999999255
+        },
+        "asrMs": {
+          "n": 3,
+          "medianMs": 752.7369999999937,
+          "p95Ms": 786.3396000000066,
+          "maxMs": 786.3396000000066
+        },
+        "toolModelMs": {
+          "n": 3,
+          "medianMs": 2634.412400000001,
+          "p95Ms": 3002.2762999999977,
+          "maxMs": 3002.2762999999977
+        },
+        "toolMs": {
+          "n": 2,
+          "medianMs": 0.8122500000026776,
+          "p95Ms": 1.2412000000185799,
+          "maxMs": 1.2412000000185799
+        },
+        "ttsMs": {
+          "n": 3,
+          "medianMs": 1478.5309000000125,
+          "p95Ms": 3644.536300000007,
+          "maxMs": 3644.536300000007
+        },
+        "modelReadWaitMs": {
+          "n": 3,
+          "medianMs": 4133.276500000065,
+          "p95Ms": 4441.363300000085,
+          "maxMs": 4441.363300000085
+        },
+        "totalServerMs": {
+          "n": 3,
+          "medianMs": 6560.254600000015,
+          "p95Ms": 8540.321799999976,
+          "maxMs": 8540.321799999976
+        }
+      }
+    }
+  },
+  "comparison": {
+    "ordinary": {
+      "firstTextMs": {
+        "deltaMedianMs": 1875.5569000000032,
+        "within500ms": false
+      },
+      "firstAudioReadyMs": {
+        "deltaMedianMs": 3061.570099999997,
+        "within500ms": false
+      },
+      "firstAudioMs": {
+        "deltaMedianMs": 3047.60000000149,
+        "within500ms": false
+      }
+    },
+    "time": {
+      "firstTextMs": {
+        "deltaMedianMs": 2924.38440000001,
+        "within500ms": false
+      },
+      "firstAudioReadyMs": {
+        "deltaMedianMs": 2871.1944000000076,
+        "within500ms": false
+      },
+      "firstAudioMs": {
+        "deltaMedianMs": 2876,
+        "within500ms": false
+      }
+    }
+  }
+}

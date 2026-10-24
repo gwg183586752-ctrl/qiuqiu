@@ -1,0 +1,166 @@
+import { useEffect, useRef, useState } from 'react';
+import { AvatarStage } from './avatar.ts';
+import { SpeechPlayer } from './player.ts';
+import { BrowserRecorder, encodeBase64 } from './recorder.ts';
+import type { ClientConfig, ServerEvent } from '../shared/protocol.ts';
+import './style.css';
+
+type Phase = 'loading' | 'connecting' | 'audioActivation' | 'idle' | 'openingMic' | 'recording' | 'processing' | 'querying' | 'playing' | 'replaced' | 'error';
+const labels: Record<Phase, string> = { loading: '小糖正在准备', connecting: '正在连接', audioActivation: '等待开启声音', idle: '可以开始聊天', openingMic: '正在开启麦克风', recording: '正在听你说', processing: '小糖正在思考', querying: '查询中', playing: '小糖正在说话', replaced: '会话已在其他页面继续', error: '需要再试一下' };
+
+export default function App() {
+  const canvas = useRef<HTMLCanvasElement>(null);
+  const controls = useRef<{ primary(): Promise<void> } | null>(null);
+  const phaseRef = useRef<Phase>('loading');
+  const [phase, setPhase] = useState<Phase>('loading');
+  const [subtitle, setSubtitle] = useState('');
+  const [error, setError] = useState('');
+  const [mode, setMode] = useState<'fake' | 'real'>('real');
+  const [ready, setReady] = useState(false);
+  const changePhase = (next: Phase) => { phaseRef.current = next; setPhase(next); };
+
+  useEffect(() => {
+    let disposed = false; let replaced = false; let socket: WebSocket | undefined;
+    let reconnect: ReturnType<typeof setTimeout> | undefined; let attempts = 0;
+    let sessionId = ''; let epoch = 0; let activeTurn = ''; let expressions: string[] = [];
+    let maxRecordingSeconds = 30; let avatarReady = false; let controlAttempt = 0;
+    const completed = new Set<string>(); const submitted = new Map<string, number>();
+    const recorder = new BrowserRecorder(); const abort = new AbortController();
+    let avatar: AvatarStage | undefined;
+    const send = (message: Record<string, unknown>) => { if (socket?.readyState === WebSocket.OPEN) socket.send(JSON.stringify({ version: 1, ...message })); };
+    const fail = (message: string) => {
+      if (disposed || replaced) return;
+      controlAttempt++;
+      if (activeTurn) completed.add(activeTurn);
+      activeTurn = ''; recorder.cancel(); player.stop(); avatar?.reset(); setError(message); changePhase('error');
+    };
+    const player = new SpeechPlayer({
+      onActivation: () => { if (!disposed && !replaced) changePhase('audioActivation'); },
+      onSegment: segment => { if (!disposed && !replaced) { setSubtitle(segment.text); avatar?.present(segment); changePhase('playing'); } },
+      onWaiting: () => { if (!disposed && !replaced && phaseRef.current !== 'audioActivation') changePhase('processing'); },
+      onComplete: turnId => {
+        if (disposed || replaced || activeTurn !== turnId) return;
+        completed.add(turnId); activeTurn = ''; avatar?.reset(); setError(''); changePhase('idle'); send({ type: 'playback.done', turnId });
+      },
+      onError: message => { fail(message); socket?.close(); },
+      onFirstAudio: turnId => { const start = submitted.get(turnId); if (start !== undefined) send({ type: 'metric', turnId, firstAudioMs: performance.now() - start }); },
+    });
+
+    const connect = async () => {
+      if (disposed || replaced) return;
+      attempts++; changePhase('connecting');
+      try {
+        const response = await fetch('/client-config', { signal: abort.signal, cache: 'no-store' });
+        if (!response.ok) throw new Error('无法读取本机连接配置。');
+        const config = await response.json() as ClientConfig;
+        const access = await fetch('/connection-check', { method: 'POST', headers: { 'X-Access-Token': config.accessToken }, signal: abort.signal });
+        if (access.status === 401 || access.status === 403) throw new Error('连接校验失败，请检查本机共享口令配置，再点击重试。');
+        if (!access.ok) throw new Error('本机连接暂时不可用，请稍后重试。');
+        setMode(config.mode); maxRecordingSeconds = config.maxRecordingSeconds;
+        let saved: string;
+        try { saved = localStorage.getItem('qiuqiu.session.v1') || ''; } catch { throw new Error('浏览器无法保存会话身份，请允许本站本地存储后重试。'); }
+        const url = new URL('/ws', location.href); url.protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+        url.searchParams.set('token', config.accessToken); if (saved) url.searchParams.set('sessionId', saved);
+        const connection = new WebSocket(url); socket = connection;
+        connection.onmessage = message => {
+          if (disposed || replaced || connection !== socket) return;
+          try {
+            const event = JSON.parse(String(message.data)) as ServerEvent;
+            if (event.version !== 1) return;
+            if (event.type === 'session.ready') {
+              sessionId = event.sessionId; epoch = event.connectionEpoch; attempts = 0;
+              try { localStorage.setItem('qiuqiu.session.v1', sessionId); } catch { fail('无法保存会话身份，请允许本站本地存储后重试。'); connection.close(); return; }
+              setError(''); changePhase(event.isNew ? 'processing' : 'idle');
+              send({ type: 'hello', expressions }); return;
+            }
+            if (event.sessionId !== sessionId || event.connectionEpoch !== epoch) return;
+            if (event.type === 'session.replaced') {
+              replaced = true; clearTimeout(reconnect); activeTurn = ''; recorder.cancel(); player.stop(); avatar?.reset(); changePhase('replaced'); connection.close(); return;
+            }
+            if (event.type === 'turn.error') {
+              if (event.turnId && completed.has(event.turnId)) return;
+              if (event.turnId && activeTurn && event.turnId !== activeTurn) return;
+              if (event.fallbackText) setSubtitle(event.fallbackText);
+              fail(event.message); return;
+            }
+            if (!('turnId' in event) || completed.has(event.turnId)) return;
+            if (event.type === 'turn.state' && !activeTurn) { activeTurn = event.turnId; player.begin(activeTurn); }
+            if (event.turnId !== activeTurn) return;
+            if (event.type === 'turn.state' && !['playing', 'audioActivation'].includes(phaseRef.current)) changePhase(event.state === 'querying' ? 'querying' : 'processing');
+            if (event.type === 'speech.segment') player.segment(event.turnId, event);
+            if (event.type === 'speech.audio') player.supply(event.turnId, event.sequence, event.data);
+            if (event.type === 'turn.done') player.finish(event.turnId);
+          } catch { fail('连接数据有些异常，请刷新后重试。'); }
+        };
+        connection.onerror = () => { if (!disposed && !replaced) setError('连接未建立，请检查本机服务与口令配置。'); };
+        connection.onclose = () => {
+          if (disposed || replaced || connection !== socket) return;
+          fail('连接已断开，正在尝试恢复。');
+          if (attempts < 3) reconnect = setTimeout(() => { void connect(); }, 1000);
+          else setError('连接未恢复，请检查服务和口令配置，再点击重试。');
+        };
+      } catch (reason) { if (!disposed) fail(reason instanceof Error ? reason.message : '暂时无法连接，请重试。'); }
+    };
+
+    controls.current = { primary: async () => {
+      const attempt = ++controlAttempt;
+      try {
+        if (!avatarReady) { location.reload(); return; }
+        if (phaseRef.current === 'audioActivation') { await player.activate(); return; }
+        if (phaseRef.current === 'recording') {
+          const endedAt = performance.now();
+          changePhase('processing'); const bytes = await recorder.finish();
+          if (attempt !== controlAttempt || disposed || replaced) return;
+          if (socket?.readyState !== WebSocket.OPEN) throw new Error('连接已断开，请重试。');
+          activeTurn = crypto.randomUUID(); player.begin(activeTurn); submitted.set(activeTurn, endedAt); setSubtitle('');
+          send({ type: 'turn.submit', turnId: activeTurn, audio: { format: 'wav', data: encodeBase64(bytes) } }); return;
+        }
+        if (!['idle', 'error'].includes(phaseRef.current)) return;
+        if (socket?.readyState !== WebSocket.OPEN) { attempts = 0; await connect(); return; }
+        changePhase('openingMic'); setError(''); setSubtitle(''); await player.activate();
+        await recorder.start(maxRecordingSeconds, () => fail('录音已达到时长限制，请缩短后再试。'), fail);
+        if (attempt === controlAttempt && !disposed && !replaced && phaseRef.current === 'openingMic') changePhase('recording');
+      } catch (reason) {
+        if (attempt !== controlAttempt || disposed || replaced) return;
+        if (reason instanceof DOMException) {
+          const messages: Record<string, string> = { NotAllowedError: '请允许使用麦克风，再点击重试。', NotFoundError: '没有找到可用的麦克风，请连接设备后重试。', NotReadableError: '麦克风暂时不可用，请检查是否被其他应用占用。', AbortError: '麦克风开启被中断，请重试。' };
+          fail(messages[reason.name] ?? '麦克风暂时不可用，请重试。');
+        } else fail(reason instanceof Error ? reason.message : '麦克风暂时不可用，请重试。');
+      }
+    } };
+
+    try {
+      avatar = new AvatarStage(canvas.current!, player.volume);
+      void avatar.load().then(supported => {
+        if (disposed) return; expressions = supported; avatarReady = true; setReady(true); void connect();
+      }).catch(() => fail('角色暂时没有加载成功，请刷新后重试。'));
+    } catch { fail('浏览器无法启动数字人画面，请检查 WebGL 支持后重试。'); }
+
+    return () => {
+      disposed = true; controls.current = null; abort.abort(); clearTimeout(reconnect);
+      socket?.close(); recorder.cancel(); player.destroy(); avatar?.dispose();
+    };
+  }, []);
+
+  const enabled = ['audioActivation', 'idle', 'recording', 'error'].includes(phase);
+  const button = phase === 'audioActivation' ? '开启声音' : phase === 'recording' ? '结束并发送' : phase === 'error' ? '重试' : phase === 'idle' ? '开始录音' : phase === 'replaced' ? '已由其他页面接管' : '请稍等';
+  return <main className="app-shell" data-phase={phase}>
+    <header className="masthead"><a className="brand" href="/" aria-label="小糖首页"><span className="ball-mark">✦</span> FOOTBALL MOMENTS</a><span className="local-mark">一场轻松的足球闲聊</span></header>
+    <section className="conversation" aria-label="与小糖对话">
+      <div className="intro"><span className="eyebrow">YOUR FOOTBALL COMPANION</span><h1>小糖，陪你聊聊足球<span>。</span></h1><p>从一粒进球，到你喜欢的那支球队。</p></div>
+      <div className="stage"><div className="pitch-line" aria-hidden="true"/><div className="stage-glow" aria-hidden="true"/>
+        <canvas ref={canvas} role="img" aria-label="小糖数字人" aria-busy={!ready} data-ready={ready} />
+        {!ready && <div className="loading-note">{error || '小糖正在来到球场…'}</div>}
+        <span className="name-tag">小糖 <i/> 今天也想听你说</span>
+      </div>
+      <div className="dialogue"><div className={`status-dot ${phase === 'recording' ? 'recording' : ''}`} role="status" aria-live="polite">{mode === 'fake' ? '模拟演示 · ' : ''}{labels[phase]}</div>
+        <p className="subtitle" data-testid="subtitle" aria-live="polite">{subtitle || (phase === 'recording' ? '说完后，再点一下发送。' : '关于足球，今天想聊些什么？')}</p>
+        {error && <p className="error-note" role="alert">{error}</p>}
+        <button className={`record-button ${phase === 'recording' ? 'is-recording' : ''}`} disabled={!enabled} onClick={() => { void controls.current?.primary(); }}>
+          <span className="button-icon" aria-hidden="true">{phase === 'recording' ? <span className="stop-icon"/> : <svg viewBox="0 0 24 24" fill="none"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4m-3 0h6"/></svg>}</span><span>{button}</span>
+        </button><p className="interaction-note">点一下开始说，再点一下发送</p>
+      </div>
+    </section>
+    <footer className="footer"><span>好球，总值得聊两句。</span><span>小糖 · FOOTBALL MOMENTS</span></footer>
+  </main>;
+}

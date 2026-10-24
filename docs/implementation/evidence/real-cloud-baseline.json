@@ -1,0 +1,35 @@
+{
+  "mode": "real",
+  "evidence": "real-cloud",
+  "inputSource": "real-tts-speech-fixture",
+  "directory": "C:\\Users\\GWG\\Desktop\\qiuqiu\\.cache\\real-cloud-1792857845010",
+  "models": {
+    "chat": "mimo-v2.6-flash",
+    "asr": "mimo-v2.5-asr",
+    "tts": "mimo-v2.5-tts",
+    "voice": "冰糖"
+  },
+  "startedAt": "2026-10-24T16:04:05.012Z",
+  "inputTtsMs": 1101.5854,
+  "inputAudioBytes": 145964,
+  "inputDurationSeconds": 3.04,
+  "transcript": "我喜欢阿森纳，请陪我聊聊足球。",
+  "success": true,
+  "answer": "阿森纳的红白配色超好看的",
+  "timings": {
+    "asrMs": 735.489,
+    "firstTextMs": 1511.5345000000002,
+    "ttsMs": 1019.0897,
+    "firstAudioReadyMs": 3214.7300999999998,
+    "totalServerMs": 3217.0636000000004
+  },
+  "segments": [
+    {
+      "sequence": 0,
+      "text": "阿森纳的红白配色超好看的",
+      "emotion": "happy",
+      "action": "nod"
+    }
+  ],
+  "completedAt": "2026-10-24T16:04:09.351Z"
+}
