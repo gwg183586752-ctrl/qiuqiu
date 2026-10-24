@@ -1,6 +1,34 @@
 import { test, expect } from '@playwright/test';
 import { simulatedWav } from '../../src/server/cloud/audio.ts';
 
+test('会话身份写入失败时保持明确错误并停止重连，允许存储后可手动恢复', async ({ page }) => {
+  let upgrades = 0; page.on('websocket', socket => { if (new URL(socket.url()).pathname === '/ws') upgrades++; });
+  await page.addInitScript(() => {
+    const scope = window as typeof window & { allowStorage: boolean }; scope.allowStorage = false;
+    const setItem = Storage.prototype.setItem;
+    Storage.prototype.setItem = function (name: string, value: string) {
+      if (!scope.allowStorage && name === 'qiuqiu.session.v1') throw new DOMException('denied', 'QuotaExceededError');
+      setItem.call(this, name, value);
+    };
+  });
+  await page.goto('/'); await expect(page.getByRole('alert')).toContainText('无法保存会话身份');
+  await page.waitForTimeout(1500); expect(upgrades).toBe(1);
+  await expect(page.getByRole('alert')).toContainText('无法保存会话身份');
+  await page.evaluate(() => { (window as typeof window & { allowStorage: boolean }).allowStorage = true; });
+  await page.getByRole('button', { name: '重试', exact: true }).click(); await expect(page.getByRole('button', { name: '开启声音' })).toBeEnabled();
+});
+
+test('媒体解码失败后释放当前播放并恢复会话，旧声音不自动重播', async ({ page }) => {
+  const sessions: { sessionId: string; isNew: boolean }[] = [];
+  page.on('websocket', socket => socket.on('framereceived', frame => { try { const event = JSON.parse(String(frame.payload)); if (event.type === 'session.ready') sessions.push(event); } catch {} }));
+  await page.addInitScript(() => {
+    HTMLMediaElement.prototype.play = function () { return Promise.reject(new DOMException('injected decode failure', 'NotSupportedError')); };
+  });
+  await page.goto('/'); await page.getByRole('button', { name: '开启声音' }).click();
+  await expect(page.getByRole('button', { name: '开始录音' })).toBeEnabled();
+  expect(sessions).toHaveLength(2); expect(sessions[1].sessionId).toBe(sessions[0].sessionId); expect(sessions[1].isNew).toBe(false);
+});
+
 test('乱序分段按序播放，已播片段的迟到重复不会阻塞播放结束', async ({ page }) => {
   let duplicate: (() => void) | undefined;
   await page.routeWebSocket('**/ws?*', socket => {

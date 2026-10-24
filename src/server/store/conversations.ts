@@ -61,7 +61,7 @@ export class ConversationStore {
     this.export(turnId, 'turn.metric');
   }
   tool(turnId: string, observation: ToolObservation) {
-    this.db.prepare('INSERT INTO tool_attempts(turn_id,ordinal,name,executed,status,input_json,result_json,duration_ms) VALUES (?,?,?,?,?,?,?,?)').run(turnId, observation.ordinal, observation.name.slice(0, 64), observation.executed ? 1 : 0, observation.status, this.safe(JSON.stringify(observation.input ?? null)), this.safe(JSON.stringify(observation.result)), observation.durationMs);
+    this.db.prepare('INSERT INTO tool_attempts(turn_id,ordinal,name,executed,status,input_json,result_json,duration_ms) VALUES (?,?,?,?,?,?,?,?)').run(turnId, observation.ordinal, this.safe(observation.name).slice(0, 64), observation.executed ? 1 : 0, observation.status, this.safe(JSON.stringify(observation.input ?? null)), this.safe(JSON.stringify(observation.result)), observation.durationMs);
     this.export(turnId, 'tool.attempt');
   }
   timings(turnId: string, values: Record<string, number>) {

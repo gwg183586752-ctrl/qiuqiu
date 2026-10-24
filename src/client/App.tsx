@@ -21,17 +21,21 @@ export default function App() {
 
   useEffect(() => {
     let disposed = false; let replaced = false; let socket: WebSocket | undefined;
-    let reconnect: ReturnType<typeof setTimeout> | undefined; let attempts = 0;
+    let reconnect: ReturnType<typeof setTimeout> | undefined; let attempts = 0; let storageUnavailable = false;
     let sessionId = ''; let epoch = 0; let activeTurn = ''; let expressions: string[] = [];
     let maxRecordingSeconds = 30; let avatarReady = false; let controlAttempt = 0;
     const completed = new Set<string>(); const submitted = new Map<string, number>();
+    const rememberCompleted = (turnId: string) => {
+      completed.add(turnId); submitted.delete(turnId);
+      if (completed.size > 64) completed.delete(completed.values().next().value!);
+    };
     const recorder = new BrowserRecorder(); const abort = new AbortController();
     let avatar: AvatarStage | undefined;
     const send = (message: Record<string, unknown>) => { if (socket?.readyState === WebSocket.OPEN) socket.send(JSON.stringify({ version: 1, ...message })); };
     const fail = (message: string) => {
       if (disposed || replaced) return;
       controlAttempt++;
-      if (activeTurn) completed.add(activeTurn);
+      if (activeTurn) rememberCompleted(activeTurn);
       activeTurn = ''; recorder.cancel(); player.stop(); avatar?.reset(); setError(message); changePhase('error');
     };
     const player = new SpeechPlayer({
@@ -40,15 +44,15 @@ export default function App() {
       onWaiting: () => { if (!disposed && !replaced && phaseRef.current !== 'audioActivation') changePhase('processing'); },
       onComplete: turnId => {
         if (disposed || replaced || activeTurn !== turnId) return;
-        completed.add(turnId); activeTurn = ''; avatar?.reset(); setError(''); changePhase('idle'); send({ type: 'playback.done', turnId });
+        rememberCompleted(turnId); activeTurn = ''; avatar?.reset(); setError(''); changePhase('idle'); send({ type: 'playback.done', turnId });
       },
       onError: message => { fail(message); socket?.close(); },
-      onFirstAudio: turnId => { const start = submitted.get(turnId); if (start !== undefined) send({ type: 'metric', turnId, firstAudioMs: performance.now() - start }); },
+      onFirstAudio: turnId => { const start = submitted.get(turnId); if (start !== undefined) { send({ type: 'metric', turnId, firstAudioMs: performance.now() - start }); submitted.delete(turnId); } },
     });
 
     const connect = async () => {
       if (disposed || replaced) return;
-      attempts++; changePhase('connecting');
+      attempts++; storageUnavailable = false; changePhase('connecting');
       try {
         const response = await fetch('/client-config', { signal: abort.signal, cache: 'no-store' });
         if (!response.ok) throw new Error('无法读取本机连接配置。');
@@ -69,7 +73,7 @@ export default function App() {
             if (event.version !== 1) return;
             if (event.type === 'session.ready') {
               sessionId = event.sessionId; epoch = event.connectionEpoch; attempts = 0;
-              try { localStorage.setItem('qiuqiu.session.v1', sessionId); } catch { fail('无法保存会话身份，请允许本站本地存储后重试。'); connection.close(); return; }
+              try { localStorage.setItem('qiuqiu.session.v1', sessionId); } catch { storageUnavailable = true; fail('无法保存会话身份，请允许本站本地存储后重试。'); connection.close(); return; }
               setError(''); changePhase(event.isNew ? 'processing' : 'idle');
               send({ type: 'hello', expressions }); return;
             }
@@ -94,7 +98,7 @@ export default function App() {
         };
         connection.onerror = () => { if (!disposed && !replaced) setError('连接未建立，请检查本机服务与口令配置。'); };
         connection.onclose = () => {
-          if (disposed || replaced || connection !== socket) return;
+          if (disposed || replaced || storageUnavailable || connection !== socket) return;
           fail('连接已断开，正在尝试恢复。');
           if (attempts < 3) reconnect = setTimeout(() => { void connect(); }, 1000);
           else setError('连接未恢复，请检查服务和口令配置，再点击重试。');

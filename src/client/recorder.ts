@@ -1,3 +1,5 @@
+import { pcm16MonoWav } from '../shared/wav.ts';
+
 export class BrowserRecorder {
   private stream?: MediaStream;
   private context?: AudioContext;
@@ -58,19 +60,14 @@ export class BrowserRecorder {
     this.cancel();
     const length = chunks.reduce((total, chunk) => total + chunk.length, 0);
     if (length < sampleRate * 0.15) throw new Error('这段录音太短了，请再说一次。');
-    const wav = new ArrayBuffer(44 + length * 2); const view = new DataView(wav);
-    const text = (offset: number, value: string) => { for (let i = 0; i < value.length; i++) view.setUint8(offset + i, value.charCodeAt(i)); };
-    text(0, 'RIFF'); view.setUint32(4, 36 + length * 2, true); text(8, 'WAVE'); text(12, 'fmt ');
-    view.setUint32(16, 16, true); view.setUint16(20, 1, true); view.setUint16(22, 1, true);
-    view.setUint32(24, sampleRate, true); view.setUint32(28, sampleRate * 2, true); view.setUint16(32, 2, true); view.setUint16(34, 16, true);
-    text(36, 'data'); view.setUint32(40, length * 2, true);
-    let offset = 44; let peak = 0;
+    const pcm = new Uint8Array(length * 2); const view = new DataView(pcm.buffer);
+    let offset = 0; let peak = 0;
     for (const chunk of chunks) for (const sample of chunk) {
       peak = Math.max(peak, Math.abs(sample));
       const value = Math.max(-1, Math.min(1, sample)); view.setInt16(offset, Math.round(value * (value < 0 ? 32768 : 32767)), true); offset += 2;
     }
     if (peak < 0.0035) throw new Error('没有听到有效声音，请靠近麦克风再试。');
-    return new Uint8Array(wav);
+    return pcm16MonoWav(pcm, sampleRate);
   }
 
   cancel() {

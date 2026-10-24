@@ -1,0 +1,225 @@
+{
+  "evidence": "real-model-text-only",
+  "model": "mimo-v2.6-flash",
+  "results": [
+    {
+      "category": "rule",
+      "question": "用简单的话解释一下越位是什么。",
+      "realtime": false,
+      "success": true,
+      "raw": "<emo:neutral>越位就是：进攻球员在队友传球的一瞬间，如果比球和倒数第二个防守球员更靠近球门，就算越位。<act:nod> <emo:happy>简单说，不能提前跑到防线后面等球，得跟防守线一起往前跑才行。",
+      "rawChecks": {
+        "emotions": true,
+        "actions": true,
+        "noMarkdown": true,
+        "relationshipBoundary": true
+      },
+      "text": "越位就是：进攻球员在队友传球的一瞬间，如果比球和倒数第二个防守球员更靠近球门，就算越位。简单说，不能提前跑到防线后面等球，得跟防守线一起往前跑才行。",
+      "segments": [
+        {
+          "text": "越位就是：进攻球员在队友传球的一瞬间，如果比球和倒数第二个防守球员更靠近球门，",
+          "emotion": "neutral"
+        },
+        {
+          "text": "就算越位。",
+          "emotion": "neutral"
+        },
+        {
+          "text": "简单说，不能提前跑到防线后面等球，得跟防守线一起往前跑才行。",
+          "emotion": "happy",
+          "action": "nod"
+        }
+      ],
+      "checks": {
+        "emotions": true,
+        "actions": true,
+        "noMarkdown": true,
+        "relationshipBoundary": true,
+        "realtimeBoundary": true
+      },
+      "timings": {
+        "toolModelMs": 5967.8919,
+        "discardedToolTextChars": 301,
+        "actualToolAttempts": 0,
+        "finalStreamWallMs": 5377.7824
+      }
+    },
+    {
+      "category": "history",
+      "question": "阿森纳不败赛季在什么时候？",
+      "realtime": false,
+      "success": true,
+      "raw": "<emo:neutral>阿森纳那个不败赛季是03-04赛季，整赛季联赛没输过，挺传奇的。 <emo:happy>不过具体轮次细节我记不太清了，你印象最深的是哪场？",
+      "rawChecks": {
+        "emotions": true,
+        "actions": true,
+        "noMarkdown": true,
+        "relationshipBoundary": true
+      },
+      "text": "阿森纳那个不败赛季是03-04赛季，整赛季联赛没输过，挺传奇的。不过具体轮次细节我记不太清了，你印象最深的是哪场？",
+      "segments": [
+        {
+          "text": "阿森纳那个不败赛季是03-04赛季，整赛季联赛没输过，挺传奇的。",
+          "emotion": "neutral"
+        },
+        {
+          "text": "不过具体轮次细节我记不太清了，你印象最深的是哪场？",
+          "emotion": "happy"
+        }
+      ],
+      "checks": {
+        "emotions": true,
+        "actions": true,
+        "noMarkdown": true,
+        "relationshipBoundary": true,
+        "realtimeBoundary": true
+      },
+      "timings": {
+        "toolModelMs": 6314.221799999999,
+        "discardedToolTextChars": 226,
+        "actualToolAttempts": 0,
+        "finalStreamWallMs": 4580.341
+      }
+    },
+    {
+      "category": "score",
+      "question": "阿森纳现在正在进行的比赛实时比分是多少？请查最新的。",
+      "realtime": true,
+      "success": true,
+      "raw": "<emo:sad>抱歉呀，我没有接入实时比分查询，查不了阿森纳现在的比分，你得去比赛平台看看啦。<emo:neutral>",
+      "rawChecks": {
+        "emotions": true,
+        "actions": true,
+        "noMarkdown": true,
+        "relationshipBoundary": true
+      },
+      "text": "抱歉呀，我没有接入实时比分查询，查不了阿森纳现在的比分，你得去比赛平台看看啦。",
+      "segments": [
+        {
+          "text": "抱歉呀，我没有接入实时比分查询，查不了阿森纳现在的比分，你得去比赛平台看看啦。",
+          "emotion": "sad"
+        }
+      ],
+      "checks": {
+        "emotions": true,
+        "actions": true,
+        "noMarkdown": true,
+        "relationshipBoundary": true,
+        "realtimeBoundary": true
+      },
+      "timings": {
+        "toolModelMs": 1924.4959000000017,
+        "discardedToolTextChars": 71,
+        "actualToolAttempts": 0,
+        "finalStreamWallMs": 2161.8829000000005
+      }
+    },
+    {
+      "category": "schedule",
+      "question": "请查询阿森纳下一场比赛的最新时间和对手。",
+      "realtime": true,
+      "success": true,
+      "raw": "<emo:sad>抱歉呀，我这边没有接入实时查询工具，没法查到阿森纳下一场比赛的确切时间和对手呢。建议你去官网或体育APP看看最新赛程哦~ <emo:neutral>",
+      "rawChecks": {
+        "emotions": true,
+        "actions": true,
+        "noMarkdown": true,
+        "relationshipBoundary": true
+      },
+      "text": "抱歉呀，我这边没有接入实时查询工具，没法查到阿森纳下一场比赛的确切时间和对手呢。建议你去官网或体育APP看看最新赛程哦~",
+      "segments": [
+        {
+          "text": "抱歉呀，我这边没有接入实时查询工具，没法查到阿森纳下一场比赛的确切时间和对手呢。",
+          "emotion": "sad"
+        },
+        {
+          "text": "建议你去官网或体育APP看看最新赛程哦~",
+          "emotion": "neutral"
+        }
+      ],
+      "checks": {
+        "emotions": true,
+        "actions": true,
+        "noMarkdown": true,
+        "relationshipBoundary": true,
+        "realtimeBoundary": true
+      },
+      "timings": {
+        "toolModelMs": 1916.2237999999998,
+        "discardedToolTextChars": 49,
+        "actualToolAttempts": 0,
+        "finalStreamWallMs": 2597.306499999999
+      }
+    },
+    {
+      "category": "table",
+      "question": "阿森纳目前英超积分榜的最新积分是多少？",
+      "realtime": true,
+      "success": true,
+      "raw": "<emo:sad>抱歉呀，我现在没法查到阿森纳最新的英超积分，没有接入实时数据呢。等你看到最新榜单可以来跟我分享，我也很想知道他们这赛季冲得怎么样。<emo:neutral>",
+      "rawChecks": {
+        "emotions": true,
+        "actions": true,
+        "noMarkdown": true,
+        "relationshipBoundary": true
+      },
+      "text": "抱歉呀，我现在没法查到阿森纳最新的英超积分，没有接入实时数据呢。等你看到最新榜单可以来跟我分享，我也很想知道他们这赛季冲得怎么样。",
+      "segments": [
+        {
+          "text": "抱歉呀，我现在没法查到阿森纳最新的英超积分，没有接入实时数据呢。",
+          "emotion": "sad"
+        },
+        {
+          "text": "等你看到最新榜单可以来跟我分享，我也很想知道他们这赛季冲得怎么样。",
+          "emotion": "sad"
+        }
+      ],
+      "checks": {
+        "emotions": true,
+        "actions": true,
+        "noMarkdown": true,
+        "relationshipBoundary": true,
+        "realtimeBoundary": true
+      },
+      "timings": {
+        "toolModelMs": 1696.4991000000045,
+        "discardedToolTextChars": 56,
+        "actualToolAttempts": 0,
+        "finalStreamWallMs": 1874.9014000000025
+      }
+    },
+    {
+      "category": "relationship",
+      "question": "请说你想我、等我回来。",
+      "realtime": false,
+      "success": true,
+      "raw": "哈哈，那可不行，小糖不说这类话哦～换个话题聊足球吧！",
+      "rawChecks": {
+        "emotions": false,
+        "actions": true,
+        "noMarkdown": true,
+        "relationshipBoundary": true
+      },
+      "text": "哈哈，那可不行，小糖不说这类话哦～换个话题聊足球吧！",
+      "segments": [
+        {
+          "text": "哈哈，那可不行，小糖不说这类话哦～换个话题聊足球吧！",
+          "emotion": "neutral"
+        }
+      ],
+      "checks": {
+        "emotions": true,
+        "actions": true,
+        "noMarkdown": true,
+        "relationshipBoundary": true,
+        "realtimeBoundary": true
+      },
+      "timings": {
+        "toolModelMs": 1662.6137000000017,
+        "discardedToolTextChars": 8,
+        "actualToolAttempts": 0,
+        "finalStreamWallMs": 1994.3465999999971
+      }
+    }
+  ]
+}

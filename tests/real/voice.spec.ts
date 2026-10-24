@@ -52,6 +52,10 @@ test('固定语音在真实Chrome与MiMo之间完成基线或Agent演出并导�
           await expect(page.getByRole('button', { name: '结束并发送', exact: true })).toBeEnabled();
           await page.waitForTimeout(padded.length / (rate * 2) * 1000);
           await page.getByRole('button', { name: '结束并发送', exact: true }).click();
+          if (repeat === 0) {
+            await expect.poll(() => typeof sample.firstAudioMs, { timeout: 90000 }).toBe('number');
+            await page.waitForTimeout(300); await page.screenshot({ path: join(directory, fixture.name + '-speaking.png'), fullPage: true });
+          }
           await expect(page.getByRole('button', { name: '开始录音', exact: true })).toBeEnabled({ timeout: 90000 });
           expect(typeof sample.transcript).toBe('string'); expect(typeof sample.answer).toBe('string'); expect(typeof sample.firstAudioMs).toBe('number');
           sample.transportSuccess = true;

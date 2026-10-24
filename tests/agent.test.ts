@@ -15,6 +15,9 @@ test('无工具闲聊的最终生成仍以用户原问题作为最后一条消�
   cloud.decideTools = async () => ({ calls: [] });
   cloud.streamFinal = async function* (messages) {
     assert.deepEqual(messages.at(-1), { role: 'user', content: '阿森纳是什么球队' });
+    const system = messages.find(message => message.role === 'system')!.content;
+    assert.match(system, /当前唯一注册工具：get_server_time/); assert.match(system, /每次回复 1-3 句/);
+    assert.match(system, /<act:nod\|shake\|tilt\|lean>/); assert.match(system, /永远不要输出/); assert.match(system, /没有 search_knowledge/);
     yield '<emo:happy>阿森纳是一支伦敦的足球队。';
   };
   const app = await startServer({ config: readConfig({ CLOUD_MODE: 'fake', BRAIN_MODE: 'agent', ACCESS_TOKEN: 'test', PORT: '0', DATABASE_PATH: ':memory:' }), cloud }); const connection = client(app.url);
@@ -22,6 +25,19 @@ test('无工具闲聊的最终生成仍以用户原问题作为最后一条消�
     await connection.hello(); connection.send({ type: 'turn.submit', turnId: 'ordinary-final-intent', audio: { format: 'wav', data: simulatedWav().toString('base64') } });
     const event = await connection.wait(e => (e.type === 'turn.done' || e.type === 'turn.error') && e.turnId === 'ordinary-final-intent');
     assert.equal(event.type, 'turn.done');
+  } finally { connection.close(); await app.close(); }
+});
+
+test('明确询问当前时间但模型漏调用时有界纠正，真实调用仍由模型发起', async () => {
+  const cloud = createFakeCloud(); let decisions = 0; let executed = 0;
+  cloud.transcribe = async () => '现在北京时间几点？';
+  cloud.decideTools = async () => ({ calls: ++decisions === 1 ? [] : [{ id: 'corrected-time-call', name: 'get_server_time', input: {} }] });
+  cloud.streamFinal = async function* (_messages, exchanges) { assert.equal(exchanges[0].results[0].value.localTime, '2026-10-25 01:00:00'); yield '<emo:neutral>现在是北京时间一点。'; };
+  const app = await startServer({ config: readConfig({ CLOUD_MODE: 'fake', BRAIN_MODE: 'agent', ACCESS_TOKEN: 'test', PORT: '0', DATABASE_PATH: ':memory:' }), cloud, timeProbe: async () => { executed++; return { iso: '2026-10-24T17:00:00Z', localTime: '2026-10-25 01:00:00' }; } }); const connection = client(app.url);
+  try {
+    await connection.hello(); connection.send({ type: 'turn.submit', turnId: 'correct-missed-time', audio: { format: 'wav', data: simulatedWav().toString('base64') } });
+    const event = await connection.wait(e => (e.type === 'turn.done' || e.type === 'turn.error') && e.turnId === 'correct-missed-time');
+    assert.equal(event.type, 'turn.done'); assert.equal(decisions, 2); assert.equal(executed, 1);
   } finally { connection.close(); await app.close(); }
 });
 
@@ -50,9 +66,9 @@ test('同响应四次调用只执行三次，最终回答和口播不含工具�
 });
 
 test('三次实际失败仍有收尾，非法工具和参数不执行且有限次判定后收尾', async () => {
-  for (const invalid of [false, true]) {
+  for (const invalid of [false, 'name', 'params'] as const) {
     const cloud = createFakeCloud(); let decisions = 0; let attempts = 0; let results: ToolExchange[] = [];
-    cloud.decideTools = async () => { decisions++; return { calls: [{ id: 'call-' + decisions, name: invalid ? 'unregistered_tool' : 'get_server_time', input: invalid ? { arbitrary: 'value' } : {} }] }; };
+    cloud.decideTools = async () => { decisions++; return { calls: [{ id: 'call-' + decisions, name: invalid === 'name' ? 'unregistered_tool' : 'get_server_time', input: invalid === 'params' ? { timeZone: 'Europe/Paris' } : {} }] }; };
     cloud.streamFinal = async function* (_messages, exchanges) { results = exchanges; yield '<emo:sad>这次没有查到有效时间，稍后再试吧。'; };
     const app = await startServer({ config: readConfig({ CLOUD_MODE: 'fake', BRAIN_MODE: 'agent', ACCESS_TOKEN: 'test', PORT: '0', DATABASE_PATH: ':memory:' }), cloud, timeProbe: async () => { attempts++; throw new Error('external-clock-failure'); } });
     const connection = client(app.url);

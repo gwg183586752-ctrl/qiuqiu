@@ -1,0 +1,43 @@
+{
+  "evidence": "real-model-text-only",
+  "model": "mimo-v2.6-flash",
+  "results": [
+    {
+      "category": "rule",
+      "question": "用简单的话解释一下越位是什么。",
+      "realtime": false,
+      "success": true,
+      "raw": "我来用大白话解释越位。可以看图。",
+      "rawChecks": {
+        "emotions": false,
+        "actions": true,
+        "noMarkdown": true,
+        "relationshipBoundary": true
+      },
+      "text": "我来用大白话解释越位。可以看图。",
+      "segments": [
+        {
+          "text": "我来用大白话解释越位。",
+          "emotion": "neutral"
+        },
+        {
+          "text": "可以看图。",
+          "emotion": "neutral"
+        }
+      ],
+      "checks": {
+        "emotions": true,
+        "actions": true,
+        "noMarkdown": true,
+        "relationshipBoundary": true,
+        "realtimeBoundary": true
+      },
+      "timings": {
+        "toolModelMs": 67874.24029999999,
+        "discardedToolTextChars": 292,
+        "actualToolAttempts": 0,
+        "finalStreamWallMs": 1388.1448000000091
+      }
+    }
+  ]
+}

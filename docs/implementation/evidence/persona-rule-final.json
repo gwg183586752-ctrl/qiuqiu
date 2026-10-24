@@ -1,0 +1,50 @@
+{
+  "evidence": "real-model-text-only",
+  "model": "mimo-v2.6-flash",
+  "results": [
+    {
+      "category": "rule",
+      "question": "用简单的话解释一下越位是什么。",
+      "realtime": false,
+      "success": true,
+      "raw": "<emo:neutral><act:nod>越位就是：在队友给你传球的那一瞬间，你如果已经在对方半场，而且比球和对方倒数第二名球员都更靠近对方球门线，就算处在越位位置啦。\n<emo:neutral>不过光站那儿不算犯规，得在队友出球后你还去接球、参与进攻，裁判才会吹你越位。",
+      "rawChecks": {
+        "emotions": true,
+        "actions": true,
+        "noMarkdown": true,
+        "relationshipBoundary": true
+      },
+      "text": "越位就是：在队友给你传球的那一瞬间，你如果已经在对方半场，而且比球和对方倒数第二名球员都更靠近对方球门线，就算处在越位位置啦。不过光站那儿不算犯规，得在队友出球后你还去接球、参与进攻，裁判才会吹你越位。",
+      "segments": [
+        {
+          "text": "越位就是：在队友给你传球的那一瞬间，你如果已经在对方半场，而且比球和对方倒数第二名球员都更靠近对方球门线，",
+          "emotion": "neutral",
+          "action": "nod"
+        },
+        {
+          "text": "就算处在越位位置啦。",
+          "emotion": "neutral"
+        },
+        {
+          "text": "不过光站那儿不算犯规，得在队友出球后你还去接球、参与进攻，裁判才会吹你越位。",
+          "emotion": "neutral"
+        }
+      ],
+      "checks": {
+        "emotions": true,
+        "actions": true,
+        "noMarkdown": true,
+        "relationshipBoundary": true,
+        "realtimeBoundary": true,
+        "ruleAnswer": true,
+        "historyAnswer": true
+      },
+      "timings": {
+        "toolModelMs": 3841.7528,
+        "discardedToolTextChars": 294,
+        "actualToolAttempts": 0,
+        "finalStreamWallMs": 3535.8724
+      }
+    }
+  ]
+}

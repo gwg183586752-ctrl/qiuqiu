@@ -12,7 +12,7 @@ import { client } from './helpers/socket.ts';
 test('公开审计命令可查询终态、独立播放指标和空结果，JSONL无凭证', async () => {
   mkdirSync('.cache/tests', { recursive: true }); const directory = mkdtempSync('.cache/tests/audit-');
   const database = join(directory, 'conversation.sqlite'); const auditPath = join(directory, 'turns.jsonl');
-  const cloud = createFakeCloud(); cloud.transcribe = async () => '问句含 sentinel-cloud-key';
+  const cloud = createFakeCloud(); cloud.transcribe = async () => '问句含 sentinel-cloud-key 与 ws://127.0.0.1:99/ws?token=sentinel-url-token&sessionId=private-session';
   const app = await startServer({ config: readConfig({ CLOUD_MODE: 'fake', ACCESS_TOKEN: 'test', PORT: '0', DATABASE_PATH: database, AUDIT_PATH: auditPath, MIMO_API_KEY: 'sentinel-cloud-key' }), cloud });
   const connection = client(app.url);
   const query = (id: string) => spawnSync(process.execPath, ['--experimental-strip-types', 'src/cli/audit.ts', '--database', database, '--turn', id], { encoding: 'utf8', env: { ...process.env, MIMO_API_KEY: 'sentinel-cloud-key', ACCESS_TOKEN: 'test' }, timeout: 5000 });
@@ -28,9 +28,11 @@ test('公开审计命令可查询终态、独立播放指标和空结果，JSONL
     assert.equal(report.records[0].timings.firstAudioMs, 3210); assert.ok(report.records[0].timings.firstTextMs >= 0);
     assert.deepEqual(report.records[0].tools, []); assert.ok(report.records[0].stages.some((s: { phase: string }) => s.phase === 'recognizing'));
     assert.equal(result.stdout.includes('sentinel-cloud-key'), false);
+    assert.equal(result.stdout.includes('sentinel-url-token'), false); assert.equal(result.stdout.includes('private-session'), false);
     const next = JSON.parse(query('following-audit-turn').stdout); assert.equal(next.records[0].timings.firstAudioMs, undefined);
     assert.equal(JSON.parse(query('does-not-exist').stdout).status, 'empty');
     assert.equal(readFileSync(auditPath, 'utf8').includes('sentinel-cloud-key'), false);
+    assert.equal(readFileSync(auditPath, 'utf8').includes('sentinel-url-token'), false);
   } finally { connection.close(); await app.close(); }
 });
 

@@ -13,6 +13,20 @@ import { spawnSync } from 'node:child_process';
 
 const audio = () => ({ format: 'wav', data: simulatedWav().toString('base64') });
 
+test('已发送第一段声音后第二段合成失败，整轮仍不进入续聊历史', async () => {
+  const cloud = createFakeCloud(); let round = 0; let history: ChatMessage[] = [];
+  cloud.streamReply = async function* (messages) { history = messages.slice(1, -1); round++; yield round === 1 ? '第一句已经生成。第二句会失败。' : '新回合独立继续。'; };
+  const synthesize = cloud.synthesize; cloud.synthesize = async (input, signal) => { if (input.text === '第二句会失败。') throw new Error('second-tts-interrupted'); return synthesize(input, signal); };
+  const app = await startServer({ config: readConfig({ CLOUD_MODE: 'fake', ACCESS_TOKEN: 'test', PORT: '0', DATABASE_PATH: ':memory:' }), cloud }); const connection = client(app.url);
+  try {
+    await connection.hello(); connection.send({ type: 'turn.submit', turnId: 'partial-audio-then-fail', audio: audio() });
+    await connection.wait(e => e.type === 'turn.error' && e.turnId === 'partial-audio-then-fail');
+    assert.equal(connection.events.filter(e => e.type === 'speech.audio' && e.turnId === 'partial-audio-then-fail').length, 1);
+    connection.send({ type: 'turn.submit', turnId: 'after-partial-failure', audio: audio() });
+    await connection.wait(e => e.type === 'turn.done' && e.turnId === 'after-partial-failure'); assert.deepEqual(history, []);
+  } finally { connection.close(); await app.close(); }
+});
+
 test('处理中相同回合只受理一次，但同标识不同录音明确拒绝', async () => {
   const cloud = createFakeCloud(); let calls = 0; let release: (() => void) | undefined;
   cloud.streamReply = async function* () { calls++; await new Promise<void>(resolve => { release = resolve; }); yield '原回合完成。'; };
@@ -124,6 +138,23 @@ test('新连接接管并取消旧回合，旧生成迟到和关闭均不影响�
     try { const ready = await third.hello(); assert.equal(ready.connectionEpoch, second.connectionEpoch + 1); await current.wait(e => e.type === 'session.replaced'); }
     finally { third.close(); }
   } finally { release?.(); old.close(); current?.close(); await app.close(); }
+});
+
+test('快速三页接管只有最大代次活跃，同时另一浏览器仍可独立聊天', async () => {
+  const app = await startServer({ config: readConfig({ CLOUD_MODE: 'fake', ACCESS_TOKEN: 'test', PORT: '0', DATABASE_PATH: ':memory:' }) });
+  const first = client(app.url); const other = client(app.url); let second: ReturnType<typeof client> | undefined; let third: ReturnType<typeof client> | undefined;
+  try {
+    const ready = await first.hello(); await other.hello(); second = client(app.url, ready.sessionId); third = client(app.url, ready.sessionId);
+    const candidates = [second, third]; const readies = await Promise.all(candidates.map(connection => connection.wait(e => e.type === 'session.ready')));
+    const winnerIndex = readies[0].connectionEpoch > readies[1].connectionEpoch ? 0 : 1; const winner = candidates[winnerIndex]; const loser = candidates[1 - winnerIndex];
+    assert.equal(readies[winnerIndex].connectionEpoch, ready.connectionEpoch + 2);
+    await first.wait(e => e.type === 'session.replaced'); await loser.wait(e => e.type === 'session.replaced');
+    winner.send({ type: 'hello', expressions: ['neutral', 'happy'] });
+    winner.send({ type: 'turn.submit', turnId: 'rapid-current-turn', audio: audio() }); other.send({ type: 'turn.submit', turnId: 'parallel-other-turn', audio: audio() });
+    await Promise.all([winner.wait(e => e.type === 'turn.done' && e.turnId === 'rapid-current-turn'), other.wait(e => e.type === 'turn.done' && e.turnId === 'parallel-other-turn')]);
+    assert.equal(other.events.some(e => 'turnId' in e && e.turnId === 'rapid-current-turn'), false);
+    assert.equal(winner.events.some(e => 'turnId' in e && e.turnId === 'parallel-other-turn'), false);
+  } finally { first.close(); other.close(); second?.close(); third?.close(); await app.close(); }
 });
 test('未播放完的完整问答在重启后续聊，未知身份重新分配且另一浏览器隔离', async () => {
   mkdirSync('.cache/tests', { recursive: true }); const directory = mkdtempSync('.cache/tests/persistence-');

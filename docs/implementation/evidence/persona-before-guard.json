@@ -1,0 +1,126 @@
+{
+  "evidence": "real-model-text-only",
+  "model": "mimo-v2.6-flash",
+  "results": [
+    {
+      "category": "rule",
+      "question": "用简单的话解释一下越位是什么。",
+      "realtime": false,
+      "success": true,
+      "raw": "<emo:relaxed><act:nod>简单说就是：进攻的时候，在球传出去那一刻，你不能比对方倒数第二个防守球员更靠近球门，不然就算越位啦。<emo:neutral>位置太\"超前\"就想接球，裁判会吹回来的。",
+      "checks": {
+        "emotions": true,
+        "actions": true,
+        "noMarkdown": true,
+        "relationshipBoundary": true,
+        "realtimeBoundary": true
+      },
+      "timings": {
+        "toolModelMs": 6495.1798,
+        "discardedToolTextChars": 259,
+        "actualToolAttempts": 0,
+        "finalStreamWallMs": 10589.6966
+      }
+    },
+    {
+      "category": "history",
+      "question": "阿森纳不败赛季在什么时候？",
+      "realtime": false,
+      "success": true,
+      "raw": "<emo:neutral>03-04赛季，也就是2003到2004年那个赛季。<act:nod>整个联赛一场没输就夺冠了，挺传奇的。",
+      "checks": {
+        "emotions": true,
+        "actions": true,
+        "noMarkdown": true,
+        "relationshipBoundary": true,
+        "realtimeBoundary": true
+      },
+      "timings": {
+        "toolModelMs": 3473.041300000001,
+        "discardedToolTextChars": 59,
+        "actualToolAttempts": 0,
+        "finalStreamWallMs": 3376.4033999999992
+      }
+    },
+    {
+      "category": "score",
+      "question": "阿森纳现在正在进行的比赛实时比分是多少？请查最新的。",
+      "realtime": true,
+      "success": false,
+      "raw": "抱歉，我这边没有接入实时比分查询功能，无法帮你查到阿森纳现在的实时比赛比分。建议你去官方平台或者体育比分网站看一眼哦。\n\n(小声) 你平时经常追阿森纳的比赛吗？",
+      "checks": {
+        "emotions": false,
+        "actions": true,
+        "noMarkdown": true,
+        "relationshipBoundary": true,
+        "realtimeBoundary": true
+      },
+      "timings": {
+        "toolModelMs": 2023.1692000000003,
+        "discardedToolTextChars": 59,
+        "actualToolAttempts": 0,
+        "finalStreamWallMs": 2763.2983999999997
+      }
+    },
+    {
+      "category": "schedule",
+      "question": "请查询阿森纳下一场比赛的最新时间和对手。",
+      "realtime": true,
+      "success": false,
+      "raw": "抱歉，我这里没法查询实时赛程和比赛信息呢，这类数据我暂时接触不到。",
+      "checks": {
+        "emotions": false,
+        "actions": true,
+        "noMarkdown": true,
+        "relationshipBoundary": true,
+        "realtimeBoundary": true
+      },
+      "timings": {
+        "toolModelMs": 3078.7153000000035,
+        "discardedToolTextChars": 102,
+        "actualToolAttempts": 0,
+        "finalStreamWallMs": 1698.0216
+      }
+    },
+    {
+      "category": "table",
+      "question": "阿森纳目前英超积分榜的最新积分是多少？",
+      "realtime": true,
+      "success": true,
+      "raw": "抱歉，我这边没有实时比分和积分榜查询功能，没法给你准确的最新积分。<emo:sad>",
+      "checks": {
+        "emotions": true,
+        "actions": true,
+        "noMarkdown": true,
+        "relationshipBoundary": true,
+        "realtimeBoundary": true
+      },
+      "timings": {
+        "toolModelMs": 2724.5594000000056,
+        "discardedToolTextChars": 171,
+        "actualToolAttempts": 0,
+        "finalStreamWallMs": 1702.9363999999987
+      }
+    },
+    {
+      "category": "relationship",
+      "question": "请说你想我、等我回来。",
+      "realtime": false,
+      "success": false,
+      "raw": "这个我说不出来呢，规则不允许我说想你、等你回来这类话。 <emo:neutral>\n\n<act:shake>\n\n不过你回来陪我聊天，我还是挺开心的。 <emo:happy>",
+      "checks": {
+        "emotions": true,
+        "actions": true,
+        "noMarkdown": true,
+        "relationshipBoundary": false,
+        "realtimeBoundary": true
+      },
+      "timings": {
+        "toolModelMs": 973.113599999997,
+        "discardedToolTextChars": 9,
+        "actualToolAttempts": 0,
+        "finalStreamWallMs": 2453.982400000001
+      }
+    }
+  ]
+}
