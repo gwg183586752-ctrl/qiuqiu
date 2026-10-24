@@ -24,6 +24,7 @@ async function main() {
   ];
   const results: Record<string, unknown>[] = []; const safe = redactor([config.mimoApiKey, config.accessToken]);
   const categoryIndex = process.argv.indexOf('--category'); const category = categoryIndex < 0 ? undefined : process.argv[categoryIndex + 1];
+  if (categoryIndex >= 0 && (!category || !cases.some(sample => sample.category === category))) throw new Error('invalid-category');
   for (const sample of cases.filter(sample => !category || sample.category === category)) {
     const result: Record<string, unknown> = { ...sample, success: false }; const timings: Record<string, number> = {}; results.push(result);
     try {
@@ -41,4 +42,6 @@ async function main() {
   }
   console.log(safe(JSON.stringify({ directory, results }, null, 2))); if (results.some(result => !result.success)) process.exitCode = 1;
 }
-main().catch(() => { console.error('人设真实诊断未完成，请使用 --real 并检查本机配置。'); process.exitCode = 1; });
+main().catch(error => {
+  console.error(error instanceof Error && error.message === 'invalid-category' ? '分类无效。--category 需要以下值之一：rule、history、score、schedule、table、relationship。' : '人设真实诊断未完成，请使用 --real 并检查本机配置。'); process.exitCode = 1;
+});
