@@ -1,6 +1,6 @@
 # M0 要求与证据映射
 
-状态截至 2026-10-25 的最终验收准备阶段。这里只映射事实，任务状态仍以 OpenSpec 清单为准。“待物理核对”没有被写成通过；最终性能新批次另行附报告。
+状态截至 2026-10-25 的软件交接阶段。这里只映射事实，任务状态仍以 OpenSpec 清单为准。“待物理核对”没有被写成通过；最终性能见 `17-acceptance.md` 及其原始数据。
 
 | 要求 | 结果与证据 |
 |---|---|
@@ -14,7 +14,7 @@
 | DH-02 | 点击开始/结束，等待首采样，处理中及播放中禁用；baseline.spec |
 | DH-03 | 真实 Chrome WAV→MiMo ASR 准确识别固定语音；真实原始样本。物理人声待用户核对 |
 | DH-04 | 乱序按序播放、字幕随 playing、迟到重复不阻塞；baseline.spec |
-| DH-05 | 官方模型六表情、四动作、音量口型；03-action 截图与浏览器观察；真实 speaking 截图另附 |
+| DH-05 | 官方模型六表情、四动作、音量口型；03-action 截图及 final-agent-speaking / final-agent-time-speaking 真实截图 |
 | DH-06 | 新会话按钮激活声音后播放开场白；baseline.spec |
 | DH-07 | 接管/断线/媒体失败清理、迟到丢弃、TTS 文字降级；browser、conversation、persistence 测试 |
 | DH-08 | 冻结输入、基线真实八轮及原始三类延迟；07-baseline-protocol、baseline-samples |
@@ -35,7 +35,7 @@
 | OB-02 | 三实际执行、第四拒绝，失败与非法项分开；agent.test、sdk-multi |
 | OB-03 | 按 session/turn 只读查询、empty 与参数错误区别；audit.test、README 命令 |
 | OB-04 | 首文字、服务端首音就绪、客户端实际首音分开；原始样本与审计 |
-| OB-05 | 同源代码指纹和同输入对照；旧批次超标且一项功能失败保留，修复后新采样待附 |
+| OB-05 | 最终同源代码指纹/同输入两批各八轮已附；均完成但 +500ms 目标未达，失败的旧批次另保留 |
 | OB-06 | JSONL 不可追加时告警，SQLite completed 与历史保留、不多调云；audit.test |
 | OB-07 | 自动化、真实云、真实浏览器证据分别列示；最终报告还需物理设备确认 |
 | AG-01 | SDK 真实时间同秒、完整 ASR→Agent→TTS、浏览器真实探针及 SQLite 审计 |

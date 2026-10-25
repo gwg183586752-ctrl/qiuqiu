@@ -9,6 +9,16 @@ import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { get } from 'node:http';
 
+test('来自其他页面的首页顶层导航允许，配置接口跨站导航仍拒绝', async () => {
+  const app = await startServer({ config: readConfig({ CLOUD_MODE: 'fake', ACCESS_TOKEN: 'test', PORT: '0', DATABASE_PATH: ':memory:' }) });
+  const status = (path: string) => new Promise<number>((resolve, reject) => {
+    const request = get(app.url + path, { headers: { 'Sec-Fetch-Site': 'cross-site', 'Sec-Fetch-Mode': 'navigate', 'Sec-Fetch-Dest': 'document' } }, response => { response.resume(); resolve(response.statusCode!); }); request.on('error', reject);
+  });
+  // 只运行网关时首页没有前端，允许导航后应落到普通404，而非来源校验403。
+  try { assert.equal(await status('/'), 404); assert.equal(await status('/client-config'), 403); }
+  finally { await app.close(); }
+});
+
 test('缺失或错误口令在升级前拒绝，正确口令才进入会话', async () => {
   const cloud = createFakeCloud(); let cloudCalls = 0;
   cloud.synthesize = async () => { cloudCalls++; throw new Error('must not run'); };

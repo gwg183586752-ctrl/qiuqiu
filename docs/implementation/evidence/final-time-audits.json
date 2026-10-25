@@ -1,0 +1,258 @@
+[
+  {
+    "turnId": "b1dc0562-9bd3-4bff-aeab-7b2f7a12dd6e",
+    "sessionId": "3c8ebfdc-a313-4026-990d-edf5356a2b6f",
+    "connectionEpoch": 1,
+    "status": "completed",
+    "startedAt": "2026-10-24T17:19:25.915Z",
+    "endedAt": "2026-10-24T17:19:37.594Z",
+    "question": "现在北京时间几点？",
+    "answer": "现在北京时间是 2026年10月25号 凌晨 1:19:32 哦。",
+    "reason": null,
+    "timings": {
+      "asrMs": 991.3979000000108,
+      "toolModelMs": 5536.345199999982,
+      "discardedToolTextChars": 0,
+      "toolMs": 10.630899999989197,
+      "actualToolAttempts": 1,
+      "modelReadWaitMs": 8977.98900000006,
+      "firstTextMs": 9386.90400000001,
+      "ttsMs": 1699.9930999999924,
+      "firstAudioReadyMs": 11671.809800000017,
+      "finalStreamWallMs": 5129.126699999993,
+      "totalServerMs": 11677.542400000006,
+      "firstAudioMs": 11750
+    },
+    "stages": [
+      {
+        "phase": "recognizing",
+        "at": "2026-10-24T17:19:25.916Z",
+        "elapsedMs": 0.446799999976065
+      },
+      {
+        "phase": "thinking",
+        "at": "2026-10-24T17:19:26.908Z",
+        "elapsedMs": 992.4600999999966
+      },
+      {
+        "phase": "querying",
+        "at": "2026-10-24T17:19:26.909Z",
+        "elapsedMs": 993.3070999999763
+      },
+      {
+        "phase": "synthesizing",
+        "at": "2026-10-24T17:19:35.887Z",
+        "elapsedMs": 9971.492100000003
+      }
+    ],
+    "tools": [
+      {
+        "ordinal": 1,
+        "name": "get_server_time",
+        "executed": true,
+        "status": "succeeded",
+        "durationMs": 10.630899999989197,
+        "input": {
+          "timeZone": "Asia/Shanghai"
+        },
+        "result": {
+          "iso": "2026-10-24T17:19:32.448Z",
+          "timeZone": "Asia/Shanghai",
+          "localTime": "2026-10-25 01:19:32"
+        }
+      }
+    ]
+  },
+  {
+    "turnId": "ca475b9b-397f-4daa-8d45-c25ac52e4c32",
+    "sessionId": "8b9aa281-1e9c-479c-b88a-d3f5a212f59e",
+    "connectionEpoch": 1,
+    "status": "completed",
+    "startedAt": "2026-10-24T17:19:58.297Z",
+    "endedAt": "2026-10-24T17:20:14.851Z",
+    "question": "现在北京时间几点？",
+    "answer": "现在北京时间是 01:20 哦。",
+    "reason": null,
+    "timings": {
+      "asrMs": 1788.5664000000106,
+      "toolModelMs": 2715.429999999993,
+      "discardedToolTextChars": 0,
+      "toolMs": 0.3837999999814201,
+      "actualToolAttempts": 1,
+      "modelReadWaitMs": 13723.747200000013,
+      "firstTextMs": 15268.641000000003,
+      "ttsMs": 1034.3140999999887,
+      "firstAudioReadyMs": 16549.823700000008,
+      "finalStreamWallMs": 12039.155499999993,
+      "totalServerMs": 16553.1771,
+      "firstAudioMs": 16611
+    },
+    "stages": [
+      {
+        "phase": "recognizing",
+        "at": "2026-10-24T17:19:58.298Z",
+        "elapsedMs": 0.23210000002291054
+      },
+      {
+        "phase": "thinking",
+        "at": "2026-10-24T17:20:00.088Z",
+        "elapsedMs": 1790.2165000000095
+      },
+      {
+        "phase": "querying",
+        "at": "2026-10-24T17:20:00.089Z",
+        "elapsedMs": 1791.1009000000195
+      },
+      {
+        "phase": "synthesizing",
+        "at": "2026-10-24T17:20:13.812Z",
+        "elapsedMs": 15515.04800000001
+      }
+    ],
+    "tools": [
+      {
+        "ordinal": 1,
+        "name": "get_server_time",
+        "executed": true,
+        "status": "succeeded",
+        "durationMs": 0.3837999999814201,
+        "input": {
+          "timeZone": "Asia/Shanghai"
+        },
+        "result": {
+          "iso": "2026-10-24T17:20:02.804Z",
+          "timeZone": "Asia/Shanghai",
+          "localTime": "2026-10-25 01:20:02"
+        }
+      }
+    ]
+  },
+  {
+    "turnId": "713ed393-b3af-45e3-ad20-18fa8ce6b77b",
+    "sessionId": "aa4b96d8-b361-49c3-b2ad-61fc95a10569",
+    "connectionEpoch": 1,
+    "status": "completed",
+    "startedAt": "2026-10-24T17:20:32.342Z",
+    "endedAt": "2026-10-24T17:20:52.074Z",
+    "question": "现在北京时间几点？",
+    "answer": "北京时间现在是 1:20 哦。",
+    "reason": null,
+    "timings": {
+      "asrMs": 928.7400000000198,
+      "toolModelMs": 10501.84109999999,
+      "discardedToolTextChars": 0,
+      "toolMs": 0.5452999999979511,
+      "actualToolAttempts": 1,
+      "modelReadWaitMs": 17106.492,
+      "firstTextMs": 17817.9424,
+      "ttsMs": 1691.3006999999925,
+      "firstAudioReadyMs": 19728.526000000013,
+      "finalStreamWallMs": 8293.769100000005,
+      "totalServerMs": 19730.88340000002,
+      "firstAudioMs": 19786.5
+    },
+    "stages": [
+      {
+        "phase": "recognizing",
+        "at": "2026-10-24T17:20:32.343Z",
+        "elapsedMs": 0.23639999999431893
+      },
+      {
+        "phase": "thinking",
+        "at": "2026-10-24T17:20:33.272Z",
+        "elapsedMs": 929.4173999999766
+      },
+      {
+        "phase": "querying",
+        "at": "2026-10-24T17:20:33.272Z",
+        "elapsedMs": 930.0172999999777
+      },
+      {
+        "phase": "synthesizing",
+        "at": "2026-10-24T17:20:50.379Z",
+        "elapsedMs": 18036.25409999999
+      }
+    ],
+    "tools": [
+      {
+        "ordinal": 1,
+        "name": "get_server_time",
+        "executed": true,
+        "status": "succeeded",
+        "durationMs": 0.5452999999979511,
+        "input": {
+          "timeZone": "Asia/Shanghai"
+        },
+        "result": {
+          "iso": "2026-10-24T17:20:43.775Z",
+          "timeZone": "Asia/Shanghai",
+          "localTime": "2026-10-25 01:20:43"
+        }
+      }
+    ]
+  },
+  {
+    "turnId": "44d3483f-cc02-43b3-b3ef-c74204b63e2d",
+    "sessionId": "02fb1931-2c70-49c0-9fb4-987115a36615",
+    "connectionEpoch": 1,
+    "status": "completed",
+    "startedAt": "2026-10-24T17:21:07.753Z",
+    "endedAt": "2026-10-24T17:21:18.617Z",
+    "question": "现在北京时间几点？",
+    "answer": "现在是北京时间 2026年10月25日凌晨 01:21:11。",
+    "reason": null,
+    "timings": {
+      "asrMs": 1562.507500000007,
+      "toolModelMs": 2031.9332999999751,
+      "discardedToolTextChars": 0,
+      "toolMs": 0.5466000000014901,
+      "actualToolAttempts": 1,
+      "modelReadWaitMs": 7474.052699999942,
+      "firstTextMs": 9033.077499999985,
+      "ttsMs": 1820.1938999999547,
+      "firstAudioReadyMs": 10856.969299999968,
+      "finalStreamWallMs": 7260.398600000015,
+      "totalServerMs": 10862.517399999982,
+      "firstAudioMs": 10936.800000000745
+    },
+    "stages": [
+      {
+        "phase": "recognizing",
+        "at": "2026-10-24T17:21:07.754Z",
+        "elapsedMs": 0.2617000000027474
+      },
+      {
+        "phase": "thinking",
+        "at": "2026-10-24T17:21:09.316Z",
+        "elapsedMs": 1563.1704999999783
+      },
+      {
+        "phase": "querying",
+        "at": "2026-10-24T17:21:09.317Z",
+        "elapsedMs": 1563.605899999995
+      },
+      {
+        "phase": "synthesizing",
+        "at": "2026-10-24T17:21:16.789Z",
+        "elapsedMs": 9036.094599999982
+      }
+    ],
+    "tools": [
+      {
+        "ordinal": 1,
+        "name": "get_server_time",
+        "executed": true,
+        "status": "succeeded",
+        "durationMs": 0.5466000000014901,
+        "input": {
+          "timeZone": "Asia/Shanghai"
+        },
+        "result": {
+          "iso": "2026-10-24T17:21:11.35Z",
+          "timeZone": "Asia/Shanghai",
+          "localTime": "2026-10-25 01:21:11"
+        }
+      }
+    ]
+  }
+]

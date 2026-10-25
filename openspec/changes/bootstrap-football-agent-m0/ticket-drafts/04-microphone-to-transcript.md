@@ -4,7 +4,7 @@
 
 **Blocked by:** #03 在浏览器演示可见可听的数字人闭环
 
-**Status:** draft — 待任务粒度、依赖和发布载体审阅
+**Status:** local implementation — 已获用户授权；进度以 ../tasks.md 为准，未发布外部工单
 
 **Spec coverage:** DH-02、DH-03、DH-07
 

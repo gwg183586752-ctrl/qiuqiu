@@ -2,7 +2,7 @@
 
 共 16 票、103 个细项。每票各有独立文件，包含交付行为、前置依赖、规格与用户故事映射、验收条件、细节步骤、验证接缝和范围边界。
 
-当前状态为 **draft**，尚未发布到 issue tracker，未使用 ready-for-agent 标签。上一级任务清单负责记录实施进度，逐票文件负责验收描述；需调整时同步两者。
+当前状态为 **local implementation**：用户已确认粒度、依赖和测试接缝，并授权 goal/implement；尚未发布到 issue tracker，未使用 ready-for-agent 标签。上一级任务清单是实施进度唯一来源，逐票文件负责验收描述；本地文件名保留 draft 以区别外部工单。
 
 ## Proposed breakdown
 

@@ -103,6 +103,8 @@ npm run cloud:check -- --real --agent --audio <PCM16单声道WAV文件>
 
 普通浏览器测试使用本机已安装 Chrome 与模拟麦克风。真实云采样入口需显式启用 `RUN_REAL_CLOUD=1`，命令及固定输入见基线验收说明。真实云合成输入经浏览器模拟麦克风采集，属于真实接口和浏览器自动化证据；物理麦克风与主观听感需单独核对，不能混记。
 
+本次最终功能、性能及剩余项见 [本机验收交接](docs/implementation/17-acceptance.md)，物理设备确认见 [实录核对](docs/implementation/18-physical-device-check.md)。当前性能增加不超过 500ms 的目标未达，原始样本和统计完整保留。
+
 ## 目录
 
 - `src/`：浏览器、服务端、共享协议与维护命令。

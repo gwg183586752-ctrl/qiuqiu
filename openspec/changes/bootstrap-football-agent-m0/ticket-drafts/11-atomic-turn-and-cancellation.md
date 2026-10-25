@@ -4,7 +4,7 @@
 
 **Blocked by:** #10 新标签页接管会话并停止旧页重连
 
-**Status:** draft — 待任务粒度、依赖和发布载体审阅
+**Status:** local implementation — 已获用户授权；进度以 ../tasks.md 为准，未发布外部工单
 
 **Spec coverage:** PC-05、PC-06、PC-07、PC-08、DH-02、DH-07
 

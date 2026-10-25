@@ -1,5 +1,7 @@
 # 规划校验记录
 
+> 以下为实施前的规划验证记录；当前应用验证和验收证据见 `docs/implementation/`，执行进度以 `tasks.md` 为准。
+
 日期：2026-10-24  
 变更：bootstrap-football-agent-m0  
 当前分支：dev

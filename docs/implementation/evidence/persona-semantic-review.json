@@ -1,0 +1,12 @@
+{
+  "reviewedAt": "2026-10-25",
+  "method": "人工依据 IFAB Law 11 核查规则要点；不是运行时知识检索或完整自动语义证明",
+  "source": "https://www.theifab.com/laws/latest/offside/",
+  "cases": [
+    { "file": "persona-before-guard.json", "category": "rule", "semanticPassed": false, "reason": "遗漏球、对方半场及仅站位不犯规的区分；原始 success 仅反映当时有限结构检查" },
+    { "file": "persona-after-guard.json", "category": "rule", "semanticPassed": false, "reason": "提及球和倒数第二名对手，但遗漏对方半场及参与进攻条件" },
+    { "file": "persona-rule-unhelpful.json", "category": "rule", "semanticPassed": false, "reason": "只表示会解释并让用户看图，没有回答规则；原始结构检查未覆盖此问题" },
+    { "file": "persona-rule-partial.json", "category": "rule", "semanticPassed": false, "reason": "已区分位置与参与进攻，仍漏掉对方半场适用范围" },
+    { "file": "persona-rule-final.json", "category": "rule", "semanticPassed": true, "reason": "包含对方半场、相对球和倒数第二名对手的位置，以及仅站位不犯规/参与进攻条件" }
+  ]
+}

@@ -4,7 +4,7 @@
 
 **Blocked by:** #02 验证原生持久存储与向量扩展；#08 用共享口令保护本机连接入口
 
-**Status:** draft — 待任务粒度、依赖和发布载体审阅
+**Status:** local implementation — 已获用户授权；进度以 ../tasks.md 为准，未发布外部工单
 
 **Spec coverage:** PC-01、PC-02、PC-03、PC-05、PC-08、PC-09
 

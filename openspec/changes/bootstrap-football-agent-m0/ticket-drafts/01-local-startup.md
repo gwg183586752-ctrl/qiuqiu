@@ -4,7 +4,7 @@
 
 **Blocked by:** None（无前置依赖，可开始）
 
-**Status:** draft — 待任务粒度、依赖和发布载体审阅
+**Status:** local implementation — 已获用户授权；进度以 ../tasks.md 为准，未发布外部工单
 
 **Spec coverage:** RT-01、RT-02、RT-06、AC-01
 

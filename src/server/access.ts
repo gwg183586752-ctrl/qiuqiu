@@ -4,9 +4,13 @@ import { timingSafeEqual } from 'node:crypto';
 export function sameLocalOrigin(request: IncomingMessage): boolean {
   const host = request.headers.host;
   if (!host || !/^(127\.0\.0\.1|localhost)(:\d+)?$/.test(host)) return false;
-  if (request.headers['sec-fetch-site'] === 'cross-site') return false;
   const origin = request.headers.origin;
-  return !origin || origin === 'http://' + host;
+  if (origin && origin !== 'http://' + host) return false;
+  if (request.headers['sec-fetch-site'] === 'cross-site') {
+    const path = request.url?.split('?')[0];
+    return request.method === 'GET' && (path === '/' || path === '/index.html') && request.headers['sec-fetch-mode'] === 'navigate' && request.headers['sec-fetch-dest'] === 'document';
+  }
+  return true;
 }
 
 export function validToken(value: unknown, expected: string): boolean {

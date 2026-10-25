@@ -26,7 +26,7 @@ export async function startServer({ config, cloud = createCloud(config), fronten
   const server = createServer((request, response) => {
     response.setHeader('Cache-Control', 'no-store');
     response.setHeader('X-Content-Type-Options', 'nosniff');
-    if (!sameLocalOrigin(request)) { response.writeHead(403); response.end('本机来源校验失败'); return; }
+    if (!sameLocalOrigin(request)) { response.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' }); response.end('本机来源校验失败'); return; }
     if (request.method === 'POST' && request.url === '/connection-check') {
       const accepted = validToken(request.headers['x-access-token'], config.accessToken);
       response.writeHead(accepted ? 204 : 401); response.end(); return;

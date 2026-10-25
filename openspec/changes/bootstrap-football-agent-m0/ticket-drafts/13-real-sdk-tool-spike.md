@@ -4,7 +4,7 @@
 
 **Blocked by:** #07 形成可重跑的基线验收和延迟报告
 
-**Status:** draft — 待任务粒度、依赖和发布载体审阅
+**Status:** local implementation — 已获用户授权；进度以 ../tasks.md 为准，未发布外部工单
 
 **Spec coverage:** AG-01、AG-03、AG-04、AG-07、AG-08、RT-06
 

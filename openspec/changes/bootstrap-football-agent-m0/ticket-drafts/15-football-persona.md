@@ -4,7 +4,7 @@
 
 **Blocked by:** #14 让数字人完成最多三次工具尝试后的回答
 
-**Status:** draft — 待任务粒度、依赖和发布载体审阅
+**Status:** local implementation — 已获用户授权；进度以 ../tasks.md 为准，未发布外部工单
 
 **Spec coverage:** AG-05、AG-06、AG-04
 
