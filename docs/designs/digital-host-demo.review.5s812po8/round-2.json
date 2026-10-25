@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "round": 2,
+  "document": "C:\\Users\\GWG\\Desktop\\qiuqiu\\demo\\docs\\designs\\digital-host-demo.md",
+  "quality_score": 9,
+  "dimensions": {
+    "completeness": "PASS",
+    "consistency": "PASS",
+    "clarity": "PASS",
+    "scope": "PASS",
+    "feasibility": "PASS"
+  },
+  "findings": [],
+  "prior": [
+    {
+      "id": "R1-1",
+      "status": "resolved",
+      "evidence": "“演出调度”新增“ASR 失败或识别为空”规则：本轮不进入规划、不开始表演，提示重新录音或输入文字，保留文字输入并允许重新录音，失败轮迟到回调按轮次丢弃。M4 明确覆盖 ASR 失败/空识别，并要求实际完成一次恢复及记录结果。",
+      "current_id": null
+    },
+    {
+      "id": "R1-2",
+      "status": "resolved",
+      "evidence": "“中文口型：先验证，再扩展”要求保存实际 TTS 时间轴、明确嘴形映射并用三句样本对照时间数据、映射及录屏检查语音对应、停顿收嘴和持续错位；明确仅开合或任意变化不算通过。M0 通过条件引用这套检查并要求保存时间数据、映射、录屏及用户听看结论。",
+      "current_id": null
+    },
+    {
+      "id": "R1-3",
+      "status": "resolved",
+      "evidence": "“演出调度”明确采用整轮接受或整轮拒绝：混合受支持与未支持请求或非法参数时，本轮身体动作、舞台变化和语音播报均不执行，只在页面说明原因和替代指令。“灯光调蓝，再跳舞”的拒绝文案与 M2 验收均已明确，并要求模型遗漏未支持意图也判为失败。",
+      "current_id": null
+    },
+    {
+      "id": "R1-4",
+      "status": "resolved",
+      "evidence": "M1 已把“不接 LLM 即可手动操作”的范围收窄为三种身体动作、灯光、镜头以及停止/复位，并明确语音、口型和字幕沿用 M0 固定样本回放作调试验证；现场生成与正式输入在 M2 接通。原先“所有承诺能力”的不明确承诺已移除。",
+      "current_id": null
+    }
+  ]
+}
