@@ -1,5 +1,11 @@
 import { pcm16MonoWav } from '../shared/wav.ts';
 
+interface CaptureOptions {
+  deviceId?: string;
+  onDevice?(label: string): void;
+  onLevel?(value: number): void;
+}
+
 export class BrowserRecorder {
   private stream?: MediaStream;
   private context?: AudioContext;
@@ -11,21 +17,23 @@ export class BrowserRecorder {
   private cancelOpening?: () => void;
   private generation = 0;
 
-  async start(maxSeconds: number, onLimit: () => void, onFailure: (message: string) => void = () => {}) {
+  async start(maxSeconds: number, onLimit: () => void, onFailure: (message: string) => void = () => {}, options: CaptureOptions = {}) {
     this.cancel();
     const generation = this.generation;
     const context = new AudioContext({ sampleRate: 16000 }); this.context = context;
     try {
       await context.resume();
       if (generation !== this.generation) throw new DOMException('采集已取消', 'AbortError');
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true, autoGainControl: true, ...(options.deviceId ? { deviceId: { exact: options.deviceId } } : {}) } });
       if (generation !== this.generation) { stream.getTracks().forEach(track => track.stop()); throw new DOMException('采集已取消', 'AbortError'); }
       this.stream = stream;
+      options.onDevice?.(stream.getAudioTracks()[0]?.label || '系统默认麦克风');
       await context.audioWorklet.addModule('/audio-recorder.worklet.js');
       if (generation !== this.generation) throw new DOMException('采集已取消', 'AbortError');
       const source = context.createMediaStreamSource(stream); this.source = source;
       const node = new AudioWorkletNode(context, 'microphone-capture'); this.node = node;
       const mute = context.createGain(); mute.gain.value = 0;
+      let lastLevelAt = 0;
       await new Promise<void>((resolve, reject) => {
         let settled = false;
         const ready = (error?: Error) => {
@@ -38,6 +46,12 @@ export class BrowserRecorder {
         node.port.onmessage = event => {
           if (generation !== this.generation || !(event.data instanceof Float32Array) || !event.data.length) return;
           this.chunks.push(event.data); ready();
+          const now = performance.now();
+          if (options.onLevel && now - lastLevelAt >= 100) {
+            lastLevelAt = now; let energy = 0;
+            for (const value of event.data as Float32Array) energy += value * value;
+            options.onLevel(Math.min(1, Math.sqrt(energy / event.data.length) * 20));
+          }
         };
         node.onprocessorerror = () => {
           const error = new Error('麦克风采集遇到问题，请重试。');
@@ -66,7 +80,7 @@ export class BrowserRecorder {
       peak = Math.max(peak, Math.abs(sample));
       const value = Math.max(-1, Math.min(1, sample)); view.setInt16(offset, Math.round(value * (value < 0 ? 32768 : 32767)), true); offset += 2;
     }
-    if (peak < 0.0035) throw new Error('没有听到有效声音，请靠近麦克风再试。');
+    if (peak < 0.0035) throw new Error('没有听到有效声音，请在麦克风设置中检查输入设备或静音后重试。');
     return pcm16MonoWav(pcm, sampleRate);
   }
 

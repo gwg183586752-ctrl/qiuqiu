@@ -1,0 +1,52 @@
+{
+  "status": "found",
+  "records": [
+    {
+      "turnId": "1bfb6d30-8df6-4dc7-bfe2-0600e3192980",
+      "sessionId": "1f05d8aa-700d-4b3b-aaba-a8bb057c9a07",
+      "connectionEpoch": 4,
+      "status": "completed",
+      "startedAt": "2026-10-25T02:58:01.957Z",
+      "endedAt": "2026-10-25T02:58:12.084Z",
+      "question": "能听到吗？小唐，能听到吗？",
+      "answer": "能听到哦，我是小糖~",
+      "reason": null,
+      "timings": {
+        "asrMs": 1913.9485999941826,
+        "toolModelMs": 5474.814300000668,
+        "discardedToolTextChars": 18,
+        "actualToolAttempts": 0,
+        "modelReadWaitMs": 6639.101399987936,
+        "firstTextMs": 8050.094099998474,
+        "finalStreamWallMs": 1166.532499998808,
+        "ttsMs": 1549.1354999989271,
+        "firstAudioReadyMs": 10114.597599998116,
+        "totalServerMs": 10116.899700000882,
+        "firstAudioMs": 10222.39999999851
+      },
+      "stages": [
+        {
+          "phase": "recognizing",
+          "at": "2026-10-25T02:58:01.966Z",
+          "elapsedMs": 3.6147999987006187
+        },
+        {
+          "phase": "thinking",
+          "at": "2026-10-25T02:58:03.880Z",
+          "elapsedMs": 1918.2603000029922
+        },
+        {
+          "phase": "querying",
+          "at": "2026-10-25T02:58:03.883Z",
+          "elapsedMs": 1921.4325999990106
+        },
+        {
+          "phase": "synthesizing",
+          "at": "2026-10-25T02:58:10.529Z",
+          "elapsedMs": 8566.89429999888
+        }
+      ],
+      "tools": []
+    }
+  ]
+}

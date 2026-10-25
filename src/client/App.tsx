@@ -17,6 +17,15 @@ export default function App() {
   const [error, setError] = useState('');
   const [mode, setMode] = useState<'fake' | 'real'>('real');
   const [ready, setReady] = useState(false);
+  const [microphones, setMicrophones] = useState<{ deviceId: string; label: string }[]>([]);
+  const [selectedMicrophone, setSelectedMicrophone] = useState('');
+  const microphoneId = useRef('');
+  const [currentMicrophone, setCurrentMicrophone] = useState('');
+  const [recordingLevel, setRecordingLevel] = useState(0);
+  const chooseMicrophone = (deviceId: string) => {
+    microphoneId.current = deviceId; setSelectedMicrophone(deviceId); setCurrentMicrophone('');
+    try { localStorage.setItem('qiuqiu.microphone.v1', deviceId); } catch { /* 当前页面仍沿用本次选择。 */ }
+  };
   const changePhase = (next: Phase) => { phaseRef.current = next; setPhase(next); };
 
   useEffect(() => {
@@ -30,13 +39,21 @@ export default function App() {
       if (completed.size > 64) completed.delete(completed.values().next().value!);
     };
     const recorder = new BrowserRecorder(); const abort = new AbortController();
+    const refreshMicrophones = async () => {
+      try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        if (!disposed) setMicrophones(devices.filter(device => device.kind === 'audioinput' && device.deviceId).map((device, index) => ({ deviceId: device.deviceId, label: device.label || '麦克风 ' + (index + 1) })));
+      } catch { /* 权限提示与录音错误由实际采集入口处理。 */ }
+    };
+    try { microphoneId.current = localStorage.getItem('qiuqiu.microphone.v1') || ''; setSelectedMicrophone(microphoneId.current); } catch { /* 设备偏好可仅保留在本页。 */ }
+    void refreshMicrophones(); navigator.mediaDevices?.addEventListener('devicechange', refreshMicrophones);
     let avatar: AvatarStage | undefined;
     const send = (message: Record<string, unknown>) => { if (socket?.readyState === WebSocket.OPEN) socket.send(JSON.stringify({ version: 1, ...message })); };
     const fail = (message: string) => {
       if (disposed || replaced) return;
       controlAttempt++;
       if (activeTurn) rememberCompleted(activeTurn);
-      activeTurn = ''; recorder.cancel(); player.stop(); avatar?.reset(); setError(message); changePhase('error');
+      activeTurn = ''; recorder.cancel(); setRecordingLevel(0); player.stop(); avatar?.reset(); setError(message); changePhase('error');
     };
     const player = new SpeechPlayer({
       onActivation: () => { if (!disposed && !replaced) changePhase('audioActivation'); },
@@ -79,7 +96,7 @@ export default function App() {
             }
             if (event.sessionId !== sessionId || event.connectionEpoch !== epoch) return;
             if (event.type === 'session.replaced') {
-              replaced = true; clearTimeout(reconnect); activeTurn = ''; recorder.cancel(); player.stop(); avatar?.reset(); changePhase('replaced'); connection.close(); return;
+              replaced = true; clearTimeout(reconnect); activeTurn = ''; recorder.cancel(); setRecordingLevel(0); player.stop(); avatar?.reset(); changePhase('replaced'); connection.close(); return;
             }
             if (event.type === 'turn.error') {
               if (event.turnId && completed.has(event.turnId)) return;
@@ -113,7 +130,7 @@ export default function App() {
         if (phaseRef.current === 'audioActivation') { await player.activate(); return; }
         if (phaseRef.current === 'recording') {
           const endedAt = performance.now();
-          changePhase('processing'); const bytes = await recorder.finish();
+          changePhase('processing'); setRecordingLevel(0); const bytes = await recorder.finish();
           if (attempt !== controlAttempt || disposed || replaced) return;
           if (socket?.readyState !== WebSocket.OPEN) throw new Error('连接已断开，请重试。');
           activeTurn = crypto.randomUUID(); player.begin(activeTurn); submitted.set(activeTurn, endedAt); setSubtitle('');
@@ -122,12 +139,16 @@ export default function App() {
         if (!['idle', 'error'].includes(phaseRef.current)) return;
         if (socket?.readyState !== WebSocket.OPEN) { attempts = 0; await connect(); return; }
         changePhase('openingMic'); setError(''); setSubtitle(''); await player.activate();
-        await recorder.start(maxRecordingSeconds, () => fail('录音已达到时长限制，请缩短后再试。'), fail);
+        await recorder.start(maxRecordingSeconds, () => fail('录音已达到时长限制，请缩短后再试。'), fail, {
+          deviceId: microphoneId.current,
+          onDevice: label => { if (!disposed && !replaced) { setCurrentMicrophone(label); void refreshMicrophones(); } },
+          onLevel: value => { if (!disposed && !replaced) setRecordingLevel(value); },
+        });
         if (attempt === controlAttempt && !disposed && !replaced && phaseRef.current === 'openingMic') changePhase('recording');
       } catch (reason) {
         if (attempt !== controlAttempt || disposed || replaced) return;
-        if (reason instanceof DOMException) {
-          const messages: Record<string, string> = { NotAllowedError: '请允许使用麦克风，再点击重试。', NotFoundError: '没有找到可用的麦克风，请连接设备后重试。', NotReadableError: '麦克风暂时不可用，请检查是否被其他应用占用。', AbortError: '麦克风开启被中断，请重试。' };
+        if (reason instanceof DOMException || (reason instanceof Error && reason.name === 'OverconstrainedError')) {
+          const messages: Record<string, string> = { NotAllowedError: '请允许使用麦克风，再点击重试。', NotFoundError: '没有找到可用的麦克风，请连接设备后重试。', NotReadableError: '麦克风暂时不可用，请检查是否被其他应用占用。', OverconstrainedError: '选中的麦克风不可用，请在麦克风设置中重新选择。', AbortError: '麦克风开启被中断，请重试。' };
           fail(messages[reason.name] ?? '麦克风暂时不可用，请重试。');
         } else fail(reason instanceof Error ? reason.message : '麦克风暂时不可用，请重试。');
       }
@@ -142,6 +163,7 @@ export default function App() {
 
     return () => {
       disposed = true; controls.current = null; abort.abort(); clearTimeout(reconnect);
+      navigator.mediaDevices?.removeEventListener('devicechange', refreshMicrophones);
       socket?.close(); recorder.cancel(); player.destroy(); avatar?.dispose();
     };
   }, []);
@@ -160,6 +182,17 @@ export default function App() {
       <div className="dialogue"><div className={`status-dot ${phase === 'recording' ? 'recording' : ''}`} role="status" aria-live="polite">{mode === 'fake' ? '模拟演示 · ' : ''}{labels[phase]}</div>
         <p className="subtitle" data-testid="subtitle" aria-live="polite">{subtitle || (phase === 'recording' ? '说完后，再点一下发送。' : '关于足球，今天想聊些什么？')}</p>
         {error && <p className="error-note" role="alert">{error}</p>}
+        {phase === 'recording' && <div className="microphone-level"><meter aria-label="麦克风音量" min={0} max={1} value={recordingLevel}/><span>说话时音量条应有变化</span></div>}
+        {['idle', 'error', 'recording'].includes(phase) && (microphones.length > 0 || currentMicrophone) && <details className="microphone-settings" open={phase === 'error' && /麦克风|录音|有效声音/.test(error) ? true : undefined}>
+          <summary>麦克风设置</summary>
+          {currentMicrophone && <p>当前输入：{currentMicrophone}</p>}
+          <label htmlFor="microphone-input">输入设备</label>
+          <select id="microphone-input" value={selectedMicrophone} disabled={!['idle', 'error'].includes(phase)} onChange={event => chooseMicrophone(event.target.value)}>
+            <option value="">浏览器默认输入（录音时显示实际设备）</option>
+            {selectedMicrophone && !microphones.some(device => device.deviceId === selectedMicrophone) && <option value={selectedMicrophone}>上次选择的设备（当前不可用）</option>}
+            {microphones.filter(device => device.deviceId !== 'default').map(device => <option key={device.deviceId} value={device.deviceId}>{device.label}</option>)}
+          </select>
+        </details>}
         <button className={`record-button ${phase === 'recording' ? 'is-recording' : ''}`} disabled={!enabled} onClick={() => { void controls.current?.primary(); }}>
           <span className="button-icon" aria-hidden="true">{phase === 'recording' ? <span className="stop-icon"/> : <svg viewBox="0 0 24 24" fill="none"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4m-3 0h6"/></svg>}</span><span>{button}</span>
         </button><p className="interaction-note">点一下开始说，再点一下发送</p>
